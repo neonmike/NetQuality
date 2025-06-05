@@ -16,6 +16,7 @@
 - 上游及接入信息直观展示
 - 中国大陆地区31个省/市/自治区电信/联通/移动三网回程延迟
 - 基于*SPEEDTEST.NET*的中国大陆（含大湾区）三网网速测试
+- 基于*NextTrace*的三网回程完整路由展示
 - 全球五大洲网速及延迟测试
 - 延迟模式、低数据模式、跳过任意章节，多种测试方式弹性选择
 - Json输出便于大数据分析
@@ -144,18 +145,24 @@ bash <(curl -Ls Net.Check.Place) -f
 
 ## 脚本贡献
 
-**Server Sponsor:**
+**服务器赞助商（排名不分先后，字母顺序罗列）**
 
-| 赞助商| 商标 | 网址 | 
+| 赞助商 | 商标 | 网址 | 
 | - | - | - | 
-| V.PS | ![vps_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_vps.png) | [https://v.ps](https://v.ps)| 
 | BAGE | ![bage_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_bage.png) | [https://bagevm.com](https://bagevm.com)|
-| 丽萨主机 | ![lisa_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_lisa.png) | [https://lisahost.com](https://lisahost.com)|
+| CNFaster | ![cnfaster_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_cnfaster.png) | [https://cnfaster.com/](https://cnfaster.com/)|
 | DreamCloud | ![dreamcloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_dreamcloud.png) | [https://as211392.com/](https://as211392.com/)|
+| LisaHost</br>丽萨主机 | ![lisa_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_lisa.png) | [https://lisahost.com](https://lisahost.com)|
+| UCloud</br>优刻得 | ![ucloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_ucloud.png) | [https://www.ucloud.cn/](https://www.ucloud.cn/site/active/kuaijiesale.html?ytag=ip)|
+| V.PS | ![vps_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_vps.png) | [https://v.ps](https://v.ps)| 
 
 **仅接受长期稳定运营，信誉良好的商家*
 
 **Acknowledgments:**
+
+- 感谢NextTrace项目组（[官网](https://www.nxtrace.org/)，[GitHub](https://github.com/nxtrace/NTrace-core)）提供稳定可靠的三网回程路由测试工具，我的努力只是站在你们诸位巨人的肩膀上向前一小步
+
+- 感谢[SPEETNET.net](https://www.speedtest.net/)，[Speedtest® CLI](https://www.speedtest.net/apps/cli)是目前大陆地区唯一可用的命令行三网测速工具
 
 - 感谢[GlobalSign@Nodeseek](https://www.nodeseek.com/space/5813#/general)提供稳定可靠的三网测试地址，你的付出为脚本最重要的功能之一奠定了坚实基础
 
