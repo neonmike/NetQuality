@@ -16,6 +16,7 @@
 - Intuitive display of upstream and access information
 - Return latency tests for China Mainland’s 31 provinces/cities/autonomous regions via China Telecom, China Unicom, and China Mobile
 - Speed test for China Mainland’s three major ISPs (including the Greater Bay Area) based on *SPEEDTEST.NET*
+- Full China Telecom/Unicom/Mobile return route display powered by *NextTrace*
 - Global speed and latency tests across five continents
 - Flexible test modes: latency mode, low data mode, selective section skipping
 - JSON output for big data analysis
@@ -156,18 +157,24 @@ bash <(curl -Ls Net.Check.Place) -Ef
 
 ## Contributions
 
-**Server Sponsor:**
+**Server Sponsors​ *(Listed in alphabetical order, no ranking implied)*:**
 
 | Sponsor | Logo | Link | 
 | - | - | - | 
-| V.PS | ![vps_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_vps.png) | [https://v.ps](https://v.ps)| 
 | BAGE | ![bage_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_bage.png) | [https://bagevm.com](https://bagevm.com)|
-| LisaHost | ![lisa_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_lisa.png) | [https://lisahost.com](https://lisahost.com)|
+| CNFaster | ![cnfaster_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_cnfaster.png) | [https://cnfaster.com/](https://cnfaster.com/)|
 | DreamCloud | ![dreamcloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_dreamcloud.png) | [https://as211392.com/](https://as211392.com/)|
+| LisaHost</br>丽萨主机 | ![lisa_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_lisa.png) | [https://lisahost.com](https://lisahost.com)|
+| UCloud</br>优刻得 | ![ucloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_ucloud.png) | [https://www.ucloud.cn/](https://www.ucloud.cn/site/active/kuaijiesale.html?ytag=ip)|
+| V.PS | ![vps_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_vps.png) | [https://v.ps](https://v.ps)| 
 
 **Only accepting merchants with long-term stable operations and good reputation*
 
 **Acknowledgments:**
+
+- Thanks to the NextTrace team​ ([Official Site](https://www.nxtrace.org/), [GitHub](https://github.com/nxtrace/NTrace-core)) for providing a stable and reliable ​three-network return route testing tool. My efforts are merely a small step forward, standing on the shoulders of giants like you.
+
+- ​Thanks to [Speedtest.net](https://www.speedtest.net/) and [Speedtest® CLI​](https://www.speedtest.net/apps/cli), which is currently the ​only available command-line three-network speed testing tool​ in mainland China.
 
 - Special thanks to [GlobalSign@Nodeseek](https://www.nodeseek.com/space/5813#/general) for providing a stable and reliable three-network test address, laying a solid foundation for one of the script's most important features.
 
@@ -184,3 +191,6 @@ bash <(curl -Ls Net.Check.Place) -Ef
 
 ![Stargazers over time](https://starchart.cc/xykt/NetQuality.svg?background=%23FFFFFF&axis=%23333333&line=%2377ff77)
 
+**Daily Runs History:**
+
+![daily_runs_history](https://history.xykt.de/?name=net&days=46&chartType=bar&title=Daily%20Runs%20of%20Network%20Quality%20Script&width=1024&height=400&color=steelblue)
