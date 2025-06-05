@@ -179,3 +179,6 @@ bash <(curl -Ls Net.Check.Place) -f
 
 ![Stargazers over time](https://starchart.cc/xykt/NetQuality.svg?background=%23FFFFFF&axis=%23333333&line=%2377ff77)
 
+**Daily Runs History:**
+
+![daily_runs_history](https://history.xykt.de/?name=net&days=46&chartType=bar&title=%E7%BD%91%E7%BB%9C%E8%B4%A8%E9%87%8F%E4%BD%93%E6%A3%80%E8%84%9A%E6%9C%AC%E6%AF%8F%E6%97%A5%E8%BF%90%E8%A1%8C%E9%87%8F%E7%BB%9F%E8%AE%A1&width=1024&height=400&color=steelblue)
