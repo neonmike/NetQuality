@@ -193,4 +193,4 @@ bash <(curl -Ls Net.Check.Place) -Ef
 
 **Daily Runs History:**
 
-![daily_runs_history](https://history.xykt.de/?name=net&days=46&chartType=bar&title=Daily%20Runs%20of%20Network%20Quality%20Script&width=1024&height=400&color=steelblue)
+![daily_runs_history](https://hits.xykt.de/history/net.svg?days=46&chartType=bar&title=Daily%20Runs%20of%20Network%20Quality%20Script&width=1024&height=400&color=steelblue)
