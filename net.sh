@@ -138,29 +138,6 @@ declare ping_test_count=10
 declare pingww_test_count=12
 declare usesudo="sudo"
 declare netdata
-shelp_lines=(
-"NETWORK QUALITY CHECK SCRIPT 网络质量体检脚本"
-"Interactive Interface:  bash <(curl -sL Net.Check.Place) -EM"
-"交互界面：              bash <(curl -sL Net.Check.Place) -M"
-"Parameters 参数运行: bash <(curl -sL Net.Check.Place) [-4] [-6] [-f] [-h] [-j] [-l language] [-n] [-y] [-E] [-L] [-M] [-P] [-R province] [-S chapters]"
-"            -4                             Test IPv4                                  测试IPv4"
-"            -6                             Test IPv6                                  测试IPv6"
-"            -f                             Show full IP on reports                    报告展示完整IP地址"
-"            -h                             Help information                           帮助信息"
-"            -j                             JSON output                                JSON输出"
-"            -l cn|en                       Specify script language                    指定报告语言"
-"            -n                             No OS or dependencies check                跳过系统检测及依赖安装"
-"            -o /path/to/file.ansi          Output ANSI report to file                 输出ANSI报告至文件"
-"               /path/to/file.json          Output JSON result to file                 输出JSON结果至文件"
-"               /path/to/file.anyother      Output plain text report to file           输出纯文本报告至文件"
-"            -y                             Install dependencies without interupt      自动安装依赖"
-"            -E                             Specify English Output                     指定英文输出"
-"            -L                             Low data mode                              低数据模式（跳过测速环节）"
-"            -M                             Run with Interactive Interface             交互界面方式运行"
-"            -P                             Ping mode                                  三网延迟模式"
-"            -R [Province]                  Route mode [Specify Province]              三网完整路由模式[可选指定省份]"
-"            -S 1234567                     Skip sections by number                    跳过相应章节")
-shelp=$(printf "%s\n" "${shelp_lines[@]}")
 set_language(){
 case "$language" in
 "en"|"jp"|"es"|"de"|"fr"|"ru"|"pt")swarn[1]="ERROR: Unsupported parameters!"
@@ -2665,7 +2642,30 @@ fi
 CurlARG="$useNIC$usePROXY"
 }
 show_help(){
-echo -ne "\r$shelp\n"
+cat <<EOF
+NETWORK QUALITY CHECK SCRIPT 网络质量体检脚本
+Interactive Interface:  bash <(curl -sL Net.Check.Place) -EM
+交互界面：              bash <(curl -sL Net.Check.Place) -M
+Parameters 参数运行: bash <(curl -sL Net.Check.Place) [-4] [-6] [-f] [-h] [-j] [-l language] [-n] [-y] [-E] [-L] [-M] [-P] [-R province] [-S chapters]
+            -4                             Test IPv4                                  测试IPv4
+            -6                             Test IPv6                                  测试IPv6
+            -f                             Show full IP on reports                    报告展示完整IP地址
+            -h                             Help information                           帮助信息
+            -j                             JSON output                                JSON输出
+            -l cn|en                       Specify script language                    指定报告语言
+            -n                             No OS or dependencies check                跳过系统检测及依赖安装
+            -o /path/to/file.ansi          Output ANSI report to file                 输出ANSI报告至文件
+               /path/to/file.json          Output JSON result to file                 输出JSON结果至文件
+               /path/to/file.anyother      Output plain text report to file           输出纯文本报告至文件
+            -y                             Install dependencies without interupt      自动安装依赖
+            -E                             Specify English Output                     指定英文输出
+            -L                             Low data mode                              低数据模式（跳过测速环节）
+            -M                             Run with Interactive Interface             交互界面方式运行
+            -P                             Ping mode                                  三网延迟模式
+            -R [Province]                  Route mode [Specify Province]              三网完整路由模式[可选指定省份]
+            -S 1234567                     Skip sections by number                    跳过相应章节
+EOF
+
 exit 0
 }
 show_ad(){
