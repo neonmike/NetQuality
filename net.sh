@@ -36,10 +36,11 @@ Back_White="\033[47m"
 Font_Suffix="\033[0m"
 Font_LineClear="\033[2K"
 Font_LineUp="\033[1A"
+
 declare IP=""
 declare IPhide
 declare fullIP=0
-declare YY="cn"
+declare language="cn"
 declare is_dep=1
 declare is_nexttrace=1
 declare is_speedtest=1
@@ -161,7 +162,7 @@ shelp_lines=(
 "            -S 1234567                     Skip sections by number                    跳过相应章节")
 shelp=$(printf "%s\n" "${shelp_lines[@]}")
 set_language(){
-case "$YY" in
+case "$language" in
 "en"|"jp"|"es"|"de"|"fr"|"ru"|"pt")swarn[1]="ERROR: Unsupported parameters!"
 swarn[2]="ERROR: IP address format error!"
 swarn[3]="ERROR: Dependent programs are missing. Please run as root or install sudo!"
@@ -1163,7 +1164,7 @@ midresu[$province$j$ipv]="$Font_Green$result$lost$Font_B$(printf '%-3s' "$avg")$
 done
 local prov_space=""
 [[ $mode_ping -eq 1 ]]&&prov_space=" "
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 presu[$province]="$Font_Cyan${pshort[$province]}$prov_space${midresu[${province}1$ipv]}$tmp_space${midresu[${province}2$ipv]}$tmp_space${midresu[${province}3$ipv]}"
 else
 presu[$province]="$Font_Cyan${pcode[$province]}$prov_space${midresu[${province}1$ipv]}$tmp_space${midresu[${province}2$ipv]}$tmp_space${midresu[${province}3$ipv]}"
@@ -2003,7 +2004,7 @@ local port=0
 iperfresu[s]=-1
 iperfresu[r]=-1
 local infolen
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 infolen=$((${#6}*2))
 else
 infolen=${#6}
@@ -2142,7 +2143,7 @@ lost="$Font_Red"
 fi
 iavg[$key]="$avg"
 midresu[$key$ipv]="$Font_Green$result$lost$Font_B$(printf '%3s' "$avg")$Font_Suffix"
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 tmp_space=$((10-${#icity[$key]}*2))
 else
 tmp_space=$((10-${#icity[$key]}))
@@ -2160,7 +2161,7 @@ local ipv=$1
 local port=0
 local json_data=$(curl -sL "${rawgithub}main/ref/iperf.json")
 while IFS=" " read -r code server portl portu city cityzh;do
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 icity["$code"]="$cityzh"
 else
 icity["$code"]="$city"
@@ -2229,7 +2230,7 @@ parse_speedtest_result(){
 local tid="$1"
 local tcode="$2"
 local infolen
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 infolen=$((${#scity[$tcode]}*2+${#spv[$tcode]}*2))
 infotxt="${scity[$tcode]}${spv[$tcode]}"
 else
@@ -2307,7 +2308,7 @@ codemax[2]=0
 codemax[3]=0
 codemax[4]=0
 while IFS=" " read -r code id city cityzh provider providerzh;do
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 scity["$code"]="$cityzh"
 spv["$code"]="$providerzh"
 else
@@ -2338,7 +2339,7 @@ else
 break
 fi
 done
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 tmp_space=$((13-${#scity[$pvi$key]}*2-${#spv[$pvi$key]}*2))
 sresu[$pvi$pvj]="$Font_Cyan${scity[$pvi$key]}${spv[$pvi$key]}$(printf "%${tmp_space}s\n")"
 else
@@ -2582,7 +2583,7 @@ shift
 ;;
 -l)shift
 [[ $1 == -* ]]&&ERRORcode=1&&break
-YY=$(echo "$1"|tr '[:upper:]' '[:lower:]')
+language=$(echo "$1"|tr '[:upper:]' '[:lower:]')
 shift
 ;;
 -n)mode_no=1
@@ -2612,7 +2613,7 @@ shift
 -y)mode_yes=1
 shift
 ;;
--E)YY="en"
+-E)language="en"
 shift
 ;;
 -L)mode_low=1
@@ -2646,7 +2647,7 @@ shift
 esac
 done
 if [[ $mode_menu -eq 1 ]];then
-if [[ $YY == "cn" ]];then
+if [[ $language == "cn" ]];then
 eval "bash <(curl -sL Check.Place) -N"
 else
 eval "bash <(curl -sL Check.Place) -EN"
