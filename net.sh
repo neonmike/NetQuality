@@ -1,18 +1,18 @@
 #!/bin/bash
 script_version="v2025-05-11"
 ADLines=25
-check_bash(){
-current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
-major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
-minor_version=$(echo "$current_bash_version"|cut -d'.' -f2)
-if [ "$major_version" -lt 4 ]||{ [ "$major_version" -eq 4 ]&&[ "$minor_version" -lt 3 ];};then
-echo "ERROR: Bash version is $current_bash_version lower than 4.3!"
-echo "Tips: Run the following script to automatically upgrade Bash."
-echo "bash <(curl -sL https://raw.githubusercontent.com/xykt/NetQuality/main/ref/upgrade_bash.sh)"
+
+# 获取 Bash 的版本信息
+bash_version=$(bash --version | head -n 1)
+# 提取 major 和 minor 版本号
+bash_major_version=$(echo $bash_version | awk '{print $4}' | cut -d. -f1)
+bash_minor_version=$(echo $bash_version | awk '{print $4}' | cut -d. -f2)
+if [ "$bash_major_version" -lt 4 ]||{ [ "$bash_major_version" -eq 4 ]&&[ "$bash_minor_version" -lt 3 ];};then
+echo "ERROR: Bash version is $bash_version lower than 4.3!
+Tips: Run the following script to automatically upgrade Bash. 
+bash <(curl -sL https://raw.githubusercontent.com/xykt/NetQuality/main/ref/upgrade_bash.sh)"
 exit 0
 fi
-}
-check_bash
 Font_B="\033[1m"
 Font_D="\033[2m"
 Font_I="\033[3m"
