@@ -598,10 +598,10 @@ check_connectivity() {
     local http_code
     http_code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout "$timeout" "$url" 2>/dev/null)
     if [[ $http_code == "204" ]]; then
-        rawgithub="https://github.com/xykt/NetQuality/raw/"
+        rawgithub="https://raw.github.com/xykt/NetQuality/" # 修改为raw 原来的地址
         return 0
     else
-        rawgithub="https://testingcf.jsdelivr.net/gh/xykt/NetQuality@"
+        rawgithub="https://cdn.jsdelivr.net/gh/xykt/NetQuality@" # 稳定的官方地址
         return 1
     fi
 }
