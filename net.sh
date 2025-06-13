@@ -97,21 +97,19 @@ declare IPV4check=1
 declare IPV6check=1
 declare IPV4work=0
 declare IPV6work=0
-declare ERRORcode=0
-declare asponsor
-declare aad1
-declare shelp
-declare -A swarn
+declare ERRORcode=0 # 错误码
+
+declare -A swarn #错误消息数组
 declare -A sinfo
-declare -A shead
-declare -A sbgp
-declare -A slocal
-declare -A sconn
-declare -A sdelay
-declare -A sroute
-declare -A siperf
-declare -A sspeedtest
-declare -A stail
+declare -A shead      #报告头部信息
+declare -A sbgp       # BGP（边界网关协议）信息
+declare -A slocal     #本地网络状态信息
+declare -A sconn      #conn
+declare -A sdelay     #延迟
+declare -A sroute     #路由
+declare -A siperf     #  网络性能（尤其是 iperf 测试结果）相关的信息模板
+declare -A sspeedtest # speedtest
+declare -A stail      #报告尾部
 declare ibar=0
 declare bar_pid
 declare ibar_step=0
@@ -322,14 +320,17 @@ set_language() {
     *) echo -ne "ERROR: Language not supported!" ;;
     esac
 }
-
+# 它用来统计某个脚本或工具的运行次数
+# 访问网址获取JSON，解析获取对应的值
+# todo 完善代码的方式
 countRunTimes() {
-    local RunTimes=$(curl $CurlARG -s --max-time 10 "https://hits.xykt.de/net?action=hit" 2>&1)
+    local RunTimes=$(curl $CurlARG -s --max-time 10 "https://hits.xykt.de/net?action=hit" 2>&1) # 访问Action hit 计数一次
     stail[today]=$(echo "$RunTimes" | jq '.daily')
     stail[total]=$(echo "$RunTimes" | jq '.total')
 }
 #  进度条
 # show_progress_bar() 调用 show_progress_bar_ 函数并将所有传入的参数（$@）传递给它，同时将标准输出（1）重定向到标准错误（2）。
+
 show_progress_bar() {
     show_progress_bar_ "$@" 1>&2
 }
@@ -609,7 +610,7 @@ check_connectivity() {
 is_valid_ipv4() {
     local ip=$1
     if [[ $ip =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-        IFS='.' read -r -a octets <<<"$ip"
+        IFS='.' read -r -a octets <<<"$ip" # 读取拆封字符串
         for octet in "${octets[@]}"; do
             if ((octet < 0 || octet > 255)); then
                 IPV4work=0
@@ -623,7 +624,7 @@ is_valid_ipv4() {
         return 1
     fi
 }
-# 是否是私有地址
+# 是否是私有地址，根据地址范围，进行判断
 # 10.0.0.0 - 10.255.255.255（10.*）
 # 172.16.0.0 - 172.31.255.255（172.16.* - 172.31.*）
 # 192.168.0.0 - 192.168.255.255（192.168.*）
@@ -707,6 +708,7 @@ hide_ipv6() {
     fi
 }
 # 计算字符串的显示宽度
+# 输出总的显示宽度
 calculate_display_width() {
     local string="$1"
     local length=0
@@ -799,7 +801,8 @@ replace_html_entities() {
         -e 's/&#160;/ /g' \
         -e 's/&amp;/\&/g'
 }
-
+#  核心逻辑
+# calc_upstream() 函数是一段用 Bash 编写的脚本，用于从指定网页抓取 BGP 路由图的 SVG 内容，并解析其中的 AS 节点（as_cards）和连线（arrows），进而计算出某些 AS 节点的“上游”关系。
 calc_upstream() {
     local RESPONSE=$2
     local src_path=$(echo "$RESPONSE" | sed -n 's|.*src="\(/pathimg/[^"]*\)".*|\1|p')
@@ -882,12 +885,13 @@ calc_upstream() {
         done
     done
 }
-
+# 统计指定前缀的 IX（Internet Exchange）连接数
 calc_ix() {
     local RESULT=$(curl $CurlARG -$1 --user-agent "$UA_Browser" --max-time 10 -Ls "https://bgp.tools/ixp-rs-route/${bgp[prefix]}")
     local ROWS=$(echo "$RESULT" | sed -n '/<table id="upstreamTable"/,/<\/table>/p' | grep "<tr>" | wc -l)
     conn[ix]=$((ROWS - 1))
 }
+# 从传入的 $RESULT（一般是 BGP Tools 某个路由页面 HTML）中，解析上游（upstreams）和 peers 数量。
 calc_peers() {
     local RESULT="$1"
     if [[ $RESULT == *"This network is transit-free."* ]]; then
@@ -1063,6 +1067,7 @@ generate_uuidv4() {
     done
     echo "$uuid"
 }
+
 get_nat() {
     local temp_info="$Font_Cyan$Font_B${sinfo[nat]}$Font_Suffix"
     ((ibar_step += 1))
@@ -2809,11 +2814,16 @@ EOF
 
     exit 0
 }
-
+# GitHub 仓库下载并解析几个参考数据文件，主要完成：
+# 读取省份相关数据（iso3166 和 province JSON 文件），
+# 构建省份代码、简称、名称的映射关系，
+# 生成一组特定格式的域名映射（pdm），
+# 根据输入参数（mode_route_pv）查找对应省份，
+# 读取 AS（自治系统）编号与名称的映射表。
 
 read_ref() {
-    ISO3166=$(curl -sL -m 10 "${rawgithub}main/ref/iso3166.json")
-    RESPONSE=$(curl -sL -m 10 "${rawgithub}main/ref/province.json")
+    ISO3166=$(curl -sL -m 10 "${rawgithub}main/ref/iso3166.json")   # ios3166.json
+    RESPONSE=$(curl -sL -m 10 "${rawgithub}main/ref/province.json") # province
     while IFS=" " read -r province code short name; do
         pcode[$province]=$code
         pshort[$province]=$short
@@ -2824,7 +2834,7 @@ read_ref() {
         pdm[${province}34]="$pcode_lower-cm-v4.ip.zstaticcdn.com"
         pdm[${province}16]="$pcode_lower-ct-v6.ip.zstaticcdn.com"
         pdm[${province}26]="$pcode_lower-cu-v6.ip.zstaticcdn.com"
-        pdm[${province}36]="$pcode_lower-cm-v6.ip.zstaticcdn.com"
+        pdm[${province}36]="$pcode_lower-cm-v6.ip.zstaticcdn.com" # pdm[BJ36]="beijing-cm-v6.ip.zstaticcdn.com"
     done < <(echo "$RESPONSE" | jq -r '.[] | select(.province < 70) | "\(.province) \(.code) \(.short) \(.name)"')
     if [[ -n $mode_route_pv ]]; then
         lower_optarg="$mode_route_pv"
@@ -2964,9 +2974,16 @@ save_json() {
         fi
     done
 }
+# 检查网络状态并生成网络报告的
+# $1：传入的 IP 地址
+
+# $2：表示 IP 类型，4 表示 IPv4，6 表示 IPv6
 check_Net() {
+    set -x
+    # 变量赋值，IP 赋值为传入的第一个参数，ibar_step 计数变量初始化。
     IP=$1
     ibar_step=0
+    # 初始化一个 JSON 结构的变量 netdata，用于存储网络检测的各种数据，字段包括头部、BGP信息、本地信息、连通性、延迟、速度测试和传输。
     netdata='{
       "Head": [{}],
       "BGP": [{}],
@@ -2976,10 +2993,11 @@ check_Net() {
       "Speedtest": [],
       "Transfer": []
     }'
-    [[ $2 -eq 4 ]] && hide_ipv4 $IP
+    [[ $2 -eq 4 ]] && hide_ipv4 $IP # 隐藏地址
     [[ $2 -eq 6 ]] && hide_ipv6 $IP
-    countRunTimes
-    [[ $mode_skip != *"1"* || $mode_skip != *"3"* ]] && db_bgptools $2
+    countRunTimes #计算调用次数
+    # 接下来是一系列条件判断来控制是否调用不同的检测模块
+    [[ $mode_skip != *"1"* || $mode_skip != *"3"* ]] && db_bgptools $2 #
     [[ $mode_skip != *"1"* ]] && db_henet $2
     [[ $mode_skip != *"1"* && $2 -eq 4 && -n ${bgp[prefixnum]} ]] && get_neighbor
     getnat=()
@@ -2990,6 +3008,29 @@ check_Net() {
     [[ $mode_skip != *"5"* && $mode_route -eq 1 ]] && get_route_mode $2
     [[ $mode_skip != *"6"* && $2 -eq 4 ]] && speedtest_test
     [[ $mode_skip != *"7"* ]] && iperf_test $2
+    # 通过判断字符串变量 mode_skip 是否包含某些数字，来决定是否跳过某些检测项。
+    # 检测项包括：
+
+    # BGP信息相关（db_bgptools）
+
+    # 本地网络信息（db_henet）
+
+    # 邻居节点信息（get_neighbor）
+
+    # NAT信息（get_nat）
+
+    # TCP连接信息（get_tcp）
+
+    # 延迟检测（get_delay）
+
+    # 路由信息（get_route 和 get_route_mode）
+
+    # 速度测试（speedtest_test）
+
+    # 通过 iperf 的带宽测试（iperf_test）
+
+    
+    # 清理和控制终端输出格式，$Font_LineClear 和 $Font_LineUp 应该是预定义的控制终端光标和清屏的控制字符。输出前清除多余的行，保持界面干净
     echo -ne "$Font_LineClear" 1>&2
     if [ $2 -eq 4 ] || [[ $IPV4work -eq 0 || $IPV4check -eq 0 ]]; then
         for ((i = 0; i < ADLines; i++)); do
@@ -2997,6 +3038,8 @@ check_Net() {
             echo -ne "$Font_LineClear" 1>&2
         done
     fi
+    # 通过调用一系列 show_ 函数生成最终的网络检测报告文本，并存入变量 net_report
+    #  show_ 函数对应之前的检测项，负责格式化输出检测结果。
     local net_report=$(
         show_head
         [[ $mode_skip != *"1"* ]] && show_bgp
@@ -3008,12 +3051,27 @@ check_Net() {
         [[ $mode_skip != *"7"* ]] && show_iperf
         show_tail
     )
-    save_json $2
+    # 保存为JSON
+    save_json $2 
+# 根据变量 mode_json 的值决定输出格式：
+
+# 0：输出纯文本的检测报告
+
+# 1：输出 JSON 格式的检测数据
+
+# 如果上传返回的链接包含 https://Report.Check.Place/，则打印该链接。
     report_link=$(curl -$2 -s -X POST http://upload.check.place -d "type=net" --data-urlencode "json=$netdata" --data-urlencode "content=$net_report")
     [[ mode_json -eq 0 ]] && echo -ne "\r$net_report\n"
     [[ mode_json -eq 0 && $report_link == *"https://Report.Check.Place/"* ]] && echo -ne "\r${stail[link]}$report_link$Font_Suffix\n"
     [[ mode_json -eq 1 ]] && echo -ne "\r$netdata\n"
-    echo -ne "\r\n"
+    echo -ne "\r\n" # 黄行
+# 如果 mode_output 开启，按文件后缀名判断，将报告内容追加写入指定文件 outputfile：
+
+# 如果是 .ansi 文件，写入带颜色或格式的文本
+
+# 如果是 .json 文件，写入 JSON 数据
+
+# 其他文件写入文本，但用 sed 去掉终端控制字符（颜色等）
     if [[ mode_output -eq 1 ]]; then
         case "$outputfile" in
         *.[aA][nN][sS][iI])
@@ -3025,6 +3083,8 @@ check_Net() {
         *) echo -e "$net_report" | sed 's/\x1b\[[0-9;]*[mGKHF]//g' >>"$outputfile" 2>/dev/null ;;
         esac
     fi
+    set +x
+
 }
 generate_random_user_agent
 export LC_CTYPE=en_US.UTF-8 2>/dev/null
@@ -3037,6 +3097,7 @@ get_opts "$@"
 [[ mode_no -eq 0 ]] && install_dependencies
 set_language
 read_ref
+# 检查错误码
 if [[ $ERRORcode -ne 0 ]]; then
     echo -ne "\r$Font_B$Font_Red${swarn[$ERRORcode]}$Font_Suffix\n"
     exit $ERRORcode
