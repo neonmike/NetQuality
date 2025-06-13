@@ -138,9 +138,10 @@ declare ping_test_count=10
 declare pingww_test_count=12
 declare usesudo="sudo"
 declare netdata
+
 set_language() {
     case "$language" in
-    "en" | "jp" | "es" | "de" | "fr" | "ru" | "pt")
+    "en" | "jp" | "es" | "de" | "fr" | "ru" | "pt") # 外文英文支持
         swarn[1]="ERROR: Unsupported parameters!"
         swarn[2]="ERROR: IP address format error!"
         swarn[3]="ERROR: Dependent programs are missing. Please run as root or install sudo!"
@@ -229,7 +230,7 @@ set_language() {
         stail[thanks]=". Thanks for running xy scripts!"
         stail[link]="${Font_I}Report Link: $Font_U"
         ;;
-    "cn")
+    "cn") # 中文语言支持
         swarn[1]="错误：不支持的参数！"
         swarn[2]="错误：IP地址格式错误！"
         swarn[3]="错误：未安装依赖程序，请以root执行此脚本，或者安装sudo命令！"
@@ -321,17 +322,20 @@ set_language() {
     *) echo -ne "ERROR: Language not supported!" ;;
     esac
 }
+
 countRunTimes() {
     local RunTimes=$(curl $CurlARG -s --max-time 10 "https://hits.xykt.de/net?action=hit" 2>&1)
     stail[today]=$(echo "$RunTimes" | jq '.daily')
     stail[total]=$(echo "$RunTimes" | jq '.total')
 }
+#  进度条
+# show_progress_bar() 调用 show_progress_bar_ 函数并将所有传入的参数（$@）传递给它，同时将标准输出（1）重定向到标准错误（2）。
 show_progress_bar() {
     show_progress_bar_ "$@" 1>&2
 }
 show_progress_bar_() {
     local bar="\u280B\u2819\u2839\u2838\u283C\u2834\u2826\u2827\u2807\u280F"
-    local n=${#bar}
+    local n=${#bar} # 字符串长度
     while sleep 0.1; do
         if ! kill -0 $main_pid 2>/dev/null; then
             echo -ne ""
@@ -340,15 +344,17 @@ show_progress_bar_() {
         echo -ne "\r$Font_Cyan$Font_B[$IP]# $1$Font_Cyan$Font_B$(printf '%*s' "$2" '' | tr ' ' '.') ${bar:ibar++*6%n:6} $(printf '%02d%%' $ibar_step) $Font_Suffix"
     done
 }
+# 关闭进度条
 kill_progress_bar() {
     kill "$bar_pid" 2>/dev/null && echo -ne "\r"
 }
+# 安装依赖包
 install_dependencies() {
     local is_dep=1
     local is_nexttrace=1
     local is_speedtest=1
     local is_stun=1
-    if [ "$(uname)" == "Darwin" ] || [ $(id -u) -eq 0 ]; then
+    if [ "$(uname)" == "Darwin" ] || [ $(id -u) -eq 0 ]; then # MAC|| root
         usesudo=""
     fi
     if ! jq --version >/dev/null 2>&1 || ! curl --version >/dev/null 2>&1 || ! command -v convert >/dev/null 2>&1 || ! command -v mtr >/dev/null 2>&1 || ! command -v iperf3 >/dev/null 2>&1 || ! command -v stun >/dev/null 2>&1 || (! command -v stun >/dev/null 2>&1 && ! command -v pkg >/dev/null 2>&1 && [[ "$(uname)" != "Darwin" ]]) || (! command -v free >/dev/null 2>&1 && [[ "$(uname)" != "Darwin" ]]); then
@@ -388,11 +394,11 @@ install_dependencies() {
             echo -e "Detected parameter $Font_Green-y$Font_Suffix. Continue installation..."
         fi
         if [[ $is_dep -eq 0 ]]; then
-            if [ "$(uname)" == "Darwin" ]; then
+            if [ "$(uname)" == "Darwin" ]; then #MAC
                 install_packages "brew" "brew install"
             elif [ -f /etc/os-release ]; then
                 . /etc/os-release
-                if [ $(id -u) -ne 0 ] && ! command -v sudo >/dev/null 2>&1; then
+                if [ $(id -u) -ne 0 ] && ! command -v sudo >/dev/null 2>&1; then # 非root或者sudo
                     ERRORcode=3
                 fi
                 case $ID in
@@ -452,6 +458,7 @@ install_dependencies() {
         fi
     fi
 }
+# 安装包 jq curl imagemagick mtr-tiny iperf3 stun bc procps
 install_packages() {
     local package_manager=$1
     local install_command=$2
@@ -497,6 +504,7 @@ install_packages() {
         ;;
     esac
 }
+# 安装 speed test
 install_speedtest() {
     if [ "$(uname)" == "Darwin" ]; then
         brew tap teamookla/speedtest
@@ -527,6 +535,7 @@ install_speedtest() {
         $usesudo chmod +x /usr/bin/speedtest
     fi
 }
+# stun
 install_stun() {
     local arch
     local sys_type
@@ -562,6 +571,7 @@ declare -A browsers=(
     [Chrome]="87.0.4280.66 88.0.4324.150 89.0.4389.82"
     [Firefox]="83.0 84.0 85.0"
     [Edge]="88.0.705.50 89.0.774.57")
+# User angent 随机使用一种UA
 generate_random_user_agent() {
     local browsers_keys=(${!browsers[@]})
     local random_browser_index=$((RANDOM % ${#browsers_keys[@]}))
@@ -579,6 +589,9 @@ generate_random_user_agent() {
     Edge) UA_Browser="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${version%.*}.0.0 Safari/537.36 Edg/$version" ;;
     esac
 }
+# 利用Google 检查网络
+# 国内用CDN JSdelivr
+# 国外用 github.com
 check_connectivity() {
     local url="https://www.google.com/generate_204"
     local timeout=2
@@ -592,6 +605,7 @@ check_connectivity() {
         return 1
     fi
 }
+# 检测IPV4 地址
 is_valid_ipv4() {
     local ip=$1
     if [[ $ip =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
@@ -609,6 +623,14 @@ is_valid_ipv4() {
         return 1
     fi
 }
+# 是否是私有地址
+# 10.0.0.0 - 10.255.255.255（10.*）
+# 172.16.0.0 - 172.31.255.255（172.16.* - 172.31.*）
+# 192.168.0.0 - 192.168.255.255（192.168.*）
+# 127.0.0.0 - 127.255.255.255（127.*，用于环回地址）
+# 0.0.0.0 - 0.255.255.255（0.*，用于路由器的默认网关地址）
+# 224.0.0.0 - 239.255.255.255（224.* - 239.*，用于多播地址）
+# 240.0.0.0 - 255.255.255.255（23*，用于实验性地址和广播地址）
 is_private_ipv4() {
     local ip_address=$1
     if [[ -z $ip_address ]]; then
@@ -619,6 +641,7 @@ is_private_ipv4() {
     fi
     return 1
 }
+# 通过访问特定地址，校验获取公网IP
 get_ipv4() {
     local response
     local API_NET=("ip.sb" "ping0.cc" "icanhazip.com" "api64.ipify.org" "ifconfig.co" "ident.me")
@@ -630,6 +653,7 @@ get_ipv4() {
         fi
     done
 }
+# 隐藏IP:192.168.*.*
 hide_ipv4() {
     if [[ -n $1 ]]; then
         IFS='.' read -r -a ip_parts <<<"$1"
@@ -682,6 +706,7 @@ hide_ipv6() {
         IPhide=""
     fi
 }
+# 计算字符串的显示宽度
 calculate_display_width() {
     local string="$1"
     local length=0
@@ -697,6 +722,7 @@ calculate_display_width() {
     done
     echo "$length"
 }
+# 目标宽度和文本宽度来计算填充
 calc_padding() {
     local input_text="$1"
     local total_width=$2
@@ -708,6 +734,7 @@ calc_padding() {
         PADDING=""
     fi
 }
+# 标准化为 YYYY-MM-DD 格式
 parse_date() {
     local input="$1"
     local parsed_date=""
@@ -725,6 +752,7 @@ parse_date() {
     fi
     echo "${parsed_date:-}"
 }
+# 是将输入的文本按行包装，并根据指定的缩进量控制每行的最大长度
 wrap_text() {
     local indent=$1
     local text=$2
@@ -739,6 +767,7 @@ wrap_text() {
     result+="$text"
     echo -e "$result"
 }
+# 用来生成一个符合 UUIDv4 格式的随机字符串
 generate_uuidv4() {
     local uuid=""
     local chars="0123456789abcdef"
@@ -758,6 +787,7 @@ generate_uuidv4() {
     done
     echo "$uuid"
 }
+# 将字符串中的 HTML 实体替换回它们对应的字符
 replace_html_entities() {
     echo "$1" | sed -E \
         -e 's/&#45;/-/g' \
@@ -769,6 +799,7 @@ replace_html_entities() {
         -e 's/&#160;/ /g' \
         -e 's/&amp;/\&/g'
 }
+
 calc_upstream() {
     local RESPONSE=$2
     local src_path=$(echo "$RESPONSE" | sed -n 's|.*src="\(/pathimg/[^"]*\)".*|\1|p')
@@ -851,6 +882,7 @@ calc_upstream() {
         done
     done
 }
+
 calc_ix() {
     local RESULT=$(curl $CurlARG -$1 --user-agent "$UA_Browser" --max-time 10 -Ls "https://bgp.tools/ixp-rs-route/${bgp[prefix]}")
     local ROWS=$(echo "$RESULT" | sed -n '/<table id="upstreamTable"/,/<\/table>/p' | grep "<tr>" | wc -l)
@@ -867,6 +899,7 @@ calc_peers() {
     ROWS=$(echo "$RESULT" | sed -n '/<table id="peersTable"/,/<\/table>/p' | grep "<tr>" | wc -l)
     conn[peers]=$((ROWS - 1))
 }
+# 复杂的 BGP 数据解析函数，主要任务是从一个名为 getbgp 的关联数组中提取信息，并根据规则填充到一个名为 bgp 的关联数组
 get_bgp() {
     bgp[org]="${bgp[org]:-${getbgp[org - name]:-${getbgp[organization]:-${getbgp[orgname]:-${getbgp[owner]:-${getbgp[dscr]%%,*:-${getbgp[netname]:-${getbgp[ownerid]:-${getbgp[mnt - by]}}}}}}}}}"
     [[ ${getbgp[source]} =~ ^(RIPE|APNIC|ARIN|LACNIC|AFRINIC)$ ]] && bgp[rir]="${getbgp[source]}"
@@ -888,6 +921,7 @@ get_bgp() {
     [[ -z ${bgp[regdate]} ]] && bgp[regdate]="$(parse_date "${getbgp[created]:-${getbgp[regdate]}}")"
     [[ -z ${bgp[moddate]} ]] && bgp[moddate]="$(parse_date "${getbgp[last - modified]:-${getbgp[updated]:-${getbgp[changed]}}}")"
 }
+# 网站 bgp.tools 抓取给定 IP 地址相关的 BGP（边界网关协议）路由信息，解析并处理这些数据，最后调用几个函数来进一步计算和处理 BGP信息。
 db_bgptools() {
     local temp_info="$Font_Cyan$Font_B${sinfo[bgp]}${Font_I}BGP.TOOLS $Font_Suffix"
     ((ibar_step += 1))
@@ -940,6 +974,7 @@ db_bgptools() {
     calc_ix $1
     calc_peers "$RESPONSE"
 }
+#  HE.NET (Hurricane Electric) 网站抓取与指定 IP 地址相关的 BGP 信息，并解析这些数据
 db_henet() {
     local temp_info="$Font_Cyan$Font_B${sinfo[bgp]}${Font_I}HE.NET $Font_Suffix"
     ((ibar_step += 4))
@@ -991,6 +1026,7 @@ db_henet() {
     fi
     get_bgp
 }
+
 get_neighbor() {
     local temp_info="$Font_Cyan$Font_B${sinfo[neighbor]}$Font_Suffix"
     ((ibar_step += 1))
@@ -2582,6 +2618,7 @@ show_tail() {
     echo -ne "\r$Font_I${stail[stoday]}${stail[today]}${stail[stotal]}${stail[total]}${stail[thanks]} $Font_Suffix\n"
     echo -e ""
 }
+# 获取命令行的OPT选项
 get_opts() {
     local args=()
     while [[ $# -gt 0 ]]; do
@@ -2772,12 +2809,8 @@ EOF
 
     exit 0
 }
-show_ad() {
-    asponsor=$(curl -sL --max-time 5 "${rawgithub}main/ref/sponsor.ans")
-    aad1=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad1.ans")
-    echo -e "$asponsor" 1>&2
-    echo -e "$aad1" 1>&2
-}
+
+
 read_ref() {
     ISO3166=$(curl -sL -m 10 "${rawgithub}main/ref/iso3166.json")
     RESPONSE=$(curl -sL -m 10 "${rawgithub}main/ref/province.json")
@@ -3009,6 +3042,5 @@ if [[ $ERRORcode -ne 0 ]]; then
     exit $ERRORcode
 fi
 clear
-show_ad
 [[ $IPV4work -ne 0 && $IPV4check -ne 0 ]] && check_Net "$IPV4" 4
 [[ $IPV6work -ne 0 && $IPV6check -ne 0 ]] && check_Net "$IPV6" 6
