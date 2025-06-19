@@ -148,7 +148,8 @@ bash <(curl -Ls Net.Check.Place) -f
 **服务器赞助商（排名不分先后，字母顺序罗列）**
 
 | 赞助商 | 商标 | 网址 | 
-| - | - | - | 
+| - | - | - |  
+| AaITR | ![aaitr_logo](https://raw.githubusercontent.com/xykt/IPQuality/main/res/sponsor/logo_aaitr.png) | [https://aaitr.com](https://www.aaitr.com/link.php?id=5)| 
 | BAGE | ![bage_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_bage.png) | [https://bagevm.com](https://bagevm.com)|
 | CNFaster | ![cnfaster_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_cnfaster.png) | [https://cnfaster.com](https://cnfaster.com)|
 | DreamCloud | ![dreamcloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_dreamcloud.png) | [https://as211392.com](https://as211392.com)|
