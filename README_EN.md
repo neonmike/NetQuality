@@ -157,7 +157,7 @@ bash <(curl -Ls Net.Check.Place) -Ef
 
 ## Contributions
 
-**Server Sponsors​ *(Listed in alphabetical order, no ranking implied)*:**
+**Server Sponsors​ *(No ranking implied)*:**
 
 | Sponsor | Logo | Link | 
 | - | - | - |  
