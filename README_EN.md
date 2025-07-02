@@ -166,15 +166,16 @@ bash <(curl -Ls Net.Check.Place) -Ef
 | LisaHost</br>丽萨主机 | ![lisa_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_lisa.png) | [https://lisahost.com](https://lisahost.com)|
 | DreamCloud | ![dreamcloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_dreamcloud.png) | [https://as211392.com](https://as211392.com)|
 | CNFaster | ![cnfaster_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_cnfaster.png) | [https://cnfaster.com](https://cnfaster.com)|
-| UCloud</br>优刻得 | ![ucloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_ucloud.png) | [https://ucloud.cn](https://www.ucloud.cn/site/active/kuaijiesale.html?ytag=ip)|
+| UCloud</br>优刻得 | ![ucloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_ucloud.png) | [https://ucloud.cn](https://www.ucloud.cn/staticIPHost?ytag=uhost_ip_github)|
 | AaITR | ![aaitr_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_aaitr.png) | [https://aaitr.com](https://www.aaitr.com/link.php?id=5)| 
 | VIRCS</br>威尔克斯 | ![vircs_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_vircs.png) | [https://vircs.com](https://www.vircs.com/promotion?code=6)| 
 
+##### *E-Mail: sponsor@check.place Telegram Bot: https://t.me/xythebot*
 **Only accepting merchants with long-term stable operations and good reputation*
 
 **Acknowledgments:**
 
-- Thanks to the NextTrace team​ ([Official Site](https://www.nxtrace.org/), [GitHub](https://github.com/nxtrace/NTrace-core)) for providing a stable and reliable ​three-network return route testing tool. My efforts are merely a small step forward, standing on the shoulders of giants like you.
+- Thanks to the NextTrace team​ ([Official Site](https://www.nxtrace.org/), [GitHub](https://github.com/nxtrace/NTrace-core)) for providing a stable and reliable ​three-network return route testing tool.
 
 - ​Thanks to [Speedtest.net](https://www.speedtest.net/) and [Speedtest® CLI​](https://www.speedtest.net/apps/cli), which is currently the ​only available command-line three-network speed testing tool​ in mainland China.
 
