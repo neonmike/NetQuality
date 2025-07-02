@@ -154,15 +154,16 @@ bash <(curl -Ls Net.Check.Place) -f
 | LisaHost</br>丽萨主机 | ![lisa_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_lisa.png) | [https://lisahost.com](https://lisahost.com)|
 | DreamCloud | ![dreamcloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_dreamcloud.png) | [https://as211392.com](https://as211392.com)|
 | CNFaster | ![cnfaster_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_cnfaster.png) | [https://cnfaster.com](https://cnfaster.com)|
-| UCloud</br>优刻得 | ![ucloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_ucloud.png) | [https://ucloud.cn](https://www.ucloud.cn/site/active/kuaijiesale.html?ytag=ip)|
+| UCloud</br>优刻得 | ![ucloud_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_ucloud.png) | [https://ucloud.cn](https://www.ucloud.cn/staticIPHost?ytag=uhost_ip_github)|
 | AaITR | ![aaitr_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_aaitr.png) | [https://aaitr.com](https://www.aaitr.com/link.php?id=5)| 
 | VIRCS</br>威尔克斯 | ![vircs_logo](https://raw.githubusercontent.com/xykt/NetQuality/main/res/sponsor/logo_vircs.png) | [https://vircs.com](https://www.vircs.com/promotion?code=6)| 
 
+##### *E-Mail: sponsor@check.place Telegram Bot: https://t.me/xythebot*
 **仅接受长期稳定运营，信誉良好的商家*
 
 **Acknowledgments:**
 
-- 感谢NextTrace项目组（[官网](https://www.nxtrace.org/)，[GitHub](https://github.com/nxtrace/NTrace-core)）提供稳定可靠的三网回程路由测试工具，我的努力只是站在你们诸位巨人的肩膀上向前一小步
+- 感谢NextTrace项目组（[官网](https://www.nxtrace.org/)，[GitHub](https://github.com/nxtrace/NTrace-core)）提供稳定可靠的三网回程路由测试工具
 
 - 感谢[SPEETNET.net](https://www.speedtest.net/)，[Speedtest® CLI](https://www.speedtest.net/apps/cli)是目前大陆地区唯一可用的命令行三网测速工具
 
