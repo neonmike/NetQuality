@@ -1,6 +1,5 @@
 #!/bin/bash
-script_version="v2025-05-11"
-ADLines=25
+script_version="v2025-07-22"
 check_bash(){
 current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
 major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
@@ -36,6 +35,8 @@ Back_White="\033[47m"
 Font_Suffix="\033[0m"
 Font_LineClear="\033[2K"
 Font_LineUp="\033[1A"
+declare ADLines
+declare -A aad
 declare IP=""
 declare IPhide
 declare fullIP=0
@@ -97,8 +98,6 @@ declare IPV6check=1
 declare IPV4work=0
 declare IPV6work=0
 declare ERRORcode=0
-declare asponsor
-declare aad1
 declare shelp
 declare -A swarn
 declare -A sinfo
@@ -2668,10 +2667,34 @@ echo -ne "\r$shelp\n"
 exit 0
 }
 show_ad(){
-asponsor=$(curl -sL --max-time 5 "${rawgithub}main/ref/sponsor.ans")
-aad1=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad1.ans")
-echo -e "$asponsor" 1>&2
-echo -e "$aad1" 1>&2
+local RANDOM=$(date +%s)
+local indices=(1 2)
+for ((i=${#indices[@]}-1; i>0; i--));do
+j=$((RANDOM%(i+1)))
+temp=${indices[i]}
+indices[i]=${indices[j]}
+indices[j]=$temp
+done
+aad[0]=$(curl -sL --max-time 5 "${rawgithub}main/ref/sponsor.ans")
+aad[${indices[0]}]=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad1.ans")
+aad[${indices[1]}]=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad2.ans")
+local rows
+local cols
+read rows cols < <(stty size)
+if [[ $cols -ge 150 ]];then
+echo "${aad[0]}" 1>&2
+mapfile -t aad1 <<<"${aad[1]}"
+mapfile -t aad2 <<<"${aad[2]}"
+for ((i=0; i<12; i++));do
+printf "%-72s$Font_Suffix     %-72s\n" "${aad1[$i]}" "${aad2[$i]}" 1>&2
+done
+ADLines=24
+else
+echo "${aad[0]}" 1>&2
+echo "${aad[1]}" 1>&2
+echo "${aad[2]}" 1>&2
+ADLines=36
+fi
 }
 read_ref(){
 ISO3166=$(curl -sL -m 10 "${rawgithub}main/ref/iso3166.json")
