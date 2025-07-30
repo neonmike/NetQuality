@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="v2025-07-22"
+script_version="v2025-07-30"
 check_bash(){
 current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
 major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
@@ -138,9 +138,9 @@ declare usesudo="sudo"
 declare netdata
 shelp_lines=(
 "NETWORK QUALITY CHECK SCRIPT 网络质量体检脚本"
-"Interactive Interface:  bash <(curl -sL Net.Check.Place) -EM"
-"交互界面：              bash <(curl -sL Net.Check.Place) -M"
-"Parameters 参数运行: bash <(curl -sL Net.Check.Place) [-4] [-6] [-f] [-h] [-j] [-l language] [-n] [-y] [-E] [-L] [-M] [-P] [-R province] [-S chapters]"
+"Interactive Interface:  bash <(curl -sL https://Net.Check.Place) -EM"
+"交互界面：              bash <(curl -sL https://Net.Check.Place) -M"
+"Parameters 参数运行: bash <(curl -sL https://Net.Check.Place) [-4] [-6] [-f] [-h] [-j] [-l language] [-n] [-y] [-E] [-L] [-M] [-P] [-R province] [-S chapters]"
 "            -4                             Test IPv4                                  测试IPv4"
 "            -6                             Test IPv6                                  测试IPv6"
 "            -f                             Show full IP on reports                    报告展示完整IP地址"
@@ -194,7 +194,7 @@ sinfo[delayww]="Checking Global TCP Delay"
 sinfo[ldelayww]=25
 shead[title]="NET QUALITY CHECK REPORT: "
 shead[ver]="Version: $script_version"
-shead[bash]="bash <(curl -sL Check.Place) -EN"
+shead[bash]="bash <(curl -sL https://Check.Place) -EN"
 shead[git]="https://github.com/xykt/NetQuality"
 shead[time]=$(date -u +"Report Time: %Y-%m-%d %H:%M:%S UTC")
 shead[ltitle]=26
@@ -282,7 +282,7 @@ sinfo[delayww]="正在检测国际互连TCP大包延迟"
 sinfo[ldelayww]=27
 shead[title]="网络质量体检报告："
 shead[ver]="脚本版本：$script_version"
-shead[bash]="bash <(curl -sL Check.Place) -N"
+shead[bash]="bash <(curl -sL https://Check.Place) -N"
 shead[git]="https://github.com/xykt/NetQuality"
 shead[time]=$(TZ="Asia/Shanghai" date +"报告时间：%Y-%m-%d %H:%M:%S CST")
 shead[ltitle]=18
@@ -2646,9 +2646,9 @@ esac
 done
 if [[ $mode_menu -eq 1 ]];then
 if [[ $YY == "cn" ]];then
-eval "bash <(curl -sL Check.Place) -N"
+eval "bash <(curl -sL https://Check.Place) -N"
 else
-eval "bash <(curl -sL Check.Place) -EN"
+eval "bash <(curl -sL https://Check.Place) -EN"
 fi
 exit 0
 fi
@@ -2892,7 +2892,7 @@ local net_report=$(show_head
 [[ $mode_skip != *"7"* ]]&&show_iperf
 show_tail)
 save_json $2
-report_link=$(curl -$2 -s -X POST http://upload.check.place -d "type=net" --data-urlencode "json=$netdata" --data-urlencode "content=$net_report")
+report_link=$(curl -$2 -s -X POST https://upload.check.place -d "type=net" --data-urlencode "json=$netdata" --data-urlencode "content=$net_report")
 [[ mode_json -eq 0 ]]&&echo -ne "\r$net_report\n"
 [[ mode_json -eq 0 && $report_link == *"https://Report.Check.Place/"* ]]&&echo -ne "\r${stail[link]}$report_link$Font_Suffix\n"
 [[ mode_json -eq 1 ]]&&echo -ne "\r$netdata\n"
