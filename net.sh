@@ -2371,10 +2371,10 @@ else
 calc_padding "$(printf '%*s' "${shead[ltitle]}" '')$IPhide" 80
 echo -ne "\r$PADDING$Font_B${shead[title]}$Font_Cyan$IPhide$Font_Suffix\n"
 fi
-calc_padding "${shead[bash]}" 80
-echo -ne "\r$PADDING${shead[bash]}\n"
 calc_padding "${shead[git]}" 80
 echo -ne "\r$PADDING$Font_U${shead[git]}$Font_Suffix\n"
+calc_padding "${shead[bash]}" 80
+echo -ne "\r$PADDING${shead[bash]}\n"
 echo -ne "\r${shead[ptime]}${shead[time]}  ${shead[ver]}\n"
 echo -ne "\r$(printf '%80s'|tr ' ' '*')\n"
 }
