@@ -38,7 +38,7 @@
 ![Net](https://github.com/xykt/ScriptMenu/raw/main/res/Net_CN.png)
 
 ````bash
-bash <(curl -Ls Check.Place) -N
+bash <(curl -Ls https://Check.Place) -N
 ````
 
 ### 高级模式：参数运行
@@ -47,85 +47,87 @@ bash <(curl -Ls Check.Place) -N
 
 ##### 默认双栈检测：
 ````bash
-bash <(curl -Ls Net.Check.Place)
+bash <(curl -Ls https://Net.Check.Place)
 ````
 
 ##### 只检测IPv4结果：
 ````bash
-bash <(curl -Ls Net.Check.Place) -4
+bash <(curl -Ls https://Net.Check.Place) -4
 ````
 
 ##### 只检测IPv6结果：
 ````bash
-bash <(curl -Ls Net.Check.Place) -6
+bash <(curl -Ls https://Net.Check.Place) -6
 ````
 
 ##### 延迟模式：
 ````bash
-bash <(curl -Ls Net.Check.Place) -P
+bash <(curl -Ls https://Net.Check.Place) -P
 ````
 
 ##### 完整路由模式（TCP大包）：
 ```bash
-bash <(curl -Ls Net.Check.Place) -R [大陆地区省级行政区名称或中/英文简称]
+bash <(curl -Ls https://Net.Check.Place) -R [大陆地区省级行政区名称或中/英文简称]
 ```
 缺省状态默认检测北京、上海、广东三地
 ```bash
-bash <(curl -Ls Net.Check.Place) -R
+bash <(curl -Ls https://Net.Check.Place) -R
 ```
 指定参数可检测任意大陆省级行政区（以下任选其一）
 ```bash
-bash <(curl -Ls Net.Check.Place) -R 桂
-bash <(curl -Ls Net.Check.Place) -R 广西
-bash <(curl -Ls Net.Check.Place) -R 广西壮族自治区
-bash <(curl -Ls Net.Check.Place) -R GX
-bash <(curl -Ls Net.Check.Place) -R gx
+bash <(curl -Ls https://Net.Check.Place) -R 桂
+bash <(curl -Ls https://Net.Check.Place) -R 广西
+bash <(curl -Ls https://Net.Check.Place) -R 广西壮族自治区
+bash <(curl -Ls https://Net.Check.Place) -R GX
+bash <(curl -Ls https://Net.Check.Place) -R gx
 ```
 
 ##### 低数据模式：
 ````bash
-bash <(curl -Ls Net.Check.Place) -L
+bash <(curl -Ls https://Net.Check.Place) -L
 ````
 
 ##### 跳过任意章节：
 ````bash
-bash <(curl -Ls Net.Check.Place) -S 1234567
+bash <(curl -Ls https://Net.Check.Place) -S 1234567
 ````
 
 ##### 中英文双语支持：
 ````bash
-bash <(curl -Ls Net.Check.Place) -l cn|en
+bash <(curl -Ls https://Net.Check.Place) -l cn|en
 ````
 
 ##### Json输出（[输出示例](https://github.com/xykt/NetQuality/blob/main/res/output.json)）：
 ````bash
-bash <(curl -Ls Net.Check.Place) -j
+bash <(curl -Ls https://Net.Check.Place) -j
 ````
 
 ##### 输出报告ANSI/JSON/纯文本至文件：
 ````bash
-bash <(curl -Ls Net.Check.Place) -o /path/to/file.ansi
-bash <(curl -Ls Net.Check.Place) -o /path/to/file.json
-bash <(curl -Ls Net.Check.Place) -o /path/to/file.txtoranyother
+bash <(curl -Ls https://Net.Check.Place) -o /path/to/file.ansi
+bash <(curl -Ls https://Net.Check.Place) -o /path/to/file.json
+bash <(curl -Ls https://Net.Check.Place) -o /path/to/file.txtoranyother
 ````
 
 ##### 跳过检测系统及安装依赖：
 ````bash
-bash <(curl -Ls Net.Check.Place) -n
+bash <(curl -Ls https://Net.Check.Place) -n
 ````
 
 ##### 自动安装依赖：
 ````bash
-bash <(curl -Ls Net.Check.Place) -y
+bash <(curl -Ls https://Net.Check.Place) -y
 ````
 
 ##### 报告展示完整IP地址：
 ````bash
-bash <(curl -Ls Net.Check.Place) -f
+bash <(curl -Ls https://Net.Check.Place) -f
 ````
 
 
 ## 脚本更新
+
+2025/07/30 16:50 将所有HTTP请求替换为HTTPS以提升脚本安全性
 
 2025/05/11 14:00 增加报告svg图片分享链接，修复一些排版问题
 
