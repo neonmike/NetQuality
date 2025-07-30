@@ -38,7 +38,7 @@
 ![Net](https://github.com/xykt/ScriptMenu/raw/main/res/Net_EN.png)
 
 ````bash
-bash <(curl -Ls Check.Place) -EN
+bash <(curl -Ls https://Check.Place) -EN
 ````
 
 ### Advanced Mode: Run with Parameters
@@ -48,96 +48,98 @@ bash <(curl -Ls Check.Place) -EN
 ##### Default dual-stack detection (Either):
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -E
-bash <(curl -Ls Net.Check.Place) -l en
+bash <(curl -Ls https://Net.Check.Place) -E
+bash <(curl -Ls https://Net.Check.Place) -l en
 ```
 
 ##### IPv4-only test:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -E4
+bash <(curl -Ls https://Net.Check.Place) -E4
 ```
 
 ##### IPv6-only test:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -E6
+bash <(curl -Ls https://Net.Check.Place) -E6
 ```
 
 ##### Latency mode:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -EP
+bash <(curl -Ls https://Net.Check.Place) -EP
 ```
 
 ##### Low data mode:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -EL
+bash <(curl -Ls https://Net.Check.Place) -EL
 ```
 
 ##### Full route mode (TCP result in Chinese):
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -E -R [Province]
+bash <(curl -Ls https://Net.Check.Place) -E -R [Province]
 ```
 Test Beijing & Shanghai & Guangdong by default:
 ```bash
-bash <(curl -Ls Net.Check.Place) -E -R
+bash <(curl -Ls https://Net.Check.Place) -E -R
 ```
 Specify parameters to detect the corresponding province (Any of the following):
 ```bash
-bash <(curl -Ls Net.Check.Place) -E -R 桂
-bash <(curl -Ls Net.Check.Place) -E -R 广西
-bash <(curl -Ls Net.Check.Place) -E -R 广西壮族自治区
-bash <(curl -Ls Net.Check.Place) -E -R GX
-bash <(curl -Ls Net.Check.Place) -E -R gx
+bash <(curl -Ls https://Net.Check.Place) -E -R 桂
+bash <(curl -Ls https://Net.Check.Place) -E -R 广西
+bash <(curl -Ls https://Net.Check.Place) -E -R 广西壮族自治区
+bash <(curl -Ls https://Net.Check.Place) -E -R GX
+bash <(curl -Ls https://Net.Check.Place) -E -R gx
 ```
 
 ##### Skip specific sections:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -E -S 1234567
+bash <(curl -Ls https://Net.Check.Place) -E -S 1234567
 ```
 
 ##### Bilingual support:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -l cn|en
+bash <(curl -Ls https://Net.Check.Place) -l cn|en
 ```
 
 ##### JSON output ([Example Output](https://github.com/xykt/NetQuality/blob/main/res/output.json)):
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -Ej
+bash <(curl -Ls https://Net.Check.Place) -Ej
 ```
 
 ##### Output report to file in ANSI/JSON/Text format:
 ````bash
-bash <(curl -Ls Net.Check.Place) -o /path/to/file.ansi
-bash <(curl -Ls Net.Check.Place) -o /path/to/file.json
-bash <(curl -Ls Net.Check.Place) -o /path/to/file.txtoranyother
+bash <(curl -Ls https://Net.Check.Place) -o /path/to/file.ansi
+bash <(curl -Ls https://Net.Check.Place) -o /path/to/file.json
+bash <(curl -Ls https://Net.Check.Place) -o /path/to/file.txtoranyother
 ````
 
 ##### Skip checking OS and dependencies:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -En
+bash <(curl -Ls https://Net.Check.Place) -En
 ```
 
 ##### Auto-install dependencies:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -Ey
+bash <(curl -Ls https://Net.Check.Place) -Ey
 ```
 
 ##### Display full IP addresses in the report:
 
 ```bash
-bash <(curl -Ls Net.Check.Place) -Ef
+bash <(curl -Ls https://Net.Check.Place) -Ef
 ```
 
 ## Script Updates
+
+2025/07/30 16:50 Replace all HTTP requests with HTTPS to improve script security
 
 2025/05/11 14:00 Add report SVG image sharing link and fix some layout problems
 
