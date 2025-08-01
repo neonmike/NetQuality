@@ -137,7 +137,14 @@ bash <(curl -Ls https://Net.Check.Place) -Ey
 bash <(curl -Ls https://Net.Check.Place) -Ef
 ```
 
+##### privacy mode - Disable online report link:
+````bash
+bash <(curl -Ls https://Net.Check.Place) -p
+````
+
 ## Script Updates
+
+2025/08/01 15:15 Add -p for privacy mode, which disables online report links
 
 2025/07/30 16:50 Replace all HTTP requests with HTTPS to improve script security
 
