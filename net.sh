@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="v2025-07-30"
+script_version="v2025-08-01"
 check_bash(){
 current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
 major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
@@ -132,6 +132,7 @@ declare mode_yes=0
 declare mode_skip=""
 declare mode_menu=0
 declare mode_output=0
+declare mode_private=0
 declare ping_test_count=10
 declare pingww_test_count=12
 declare usesudo="sudo"
@@ -151,6 +152,7 @@ shelp_lines=(
 "            -o /path/to/file.ansi          Output ANSI report to file                 输出ANSI报告至文件"
 "               /path/to/file.json          Output JSON result to file                 输出JSON结果至文件"
 "               /path/to/file.anyother      Output plain text report to file           输出纯文本报告至文件"
+"            -p                             Private mode - no generate report link     隐私模式：不生成报告链接"
 "            -y                             Install dependencies without interupt      自动安装依赖"
 "            -E                             Specify English Output                     指定英文输出"
 "            -L                             Low data mode                              低数据模式（跳过测速环节）"
@@ -2534,7 +2536,7 @@ shift
 -[loSR]*)ERRORcode=1
 shift
 ;;
--[46fhjnyELMP]*)local opt="$1"
+-[46fhjnpyELMP]*)local opt="$1"
 shift
 for ((i=1; i<${#opt}; i++));do
 args+=("-${opt:i:1}")
@@ -2606,6 +2608,9 @@ touch "$outputfile" 2>/dev/null||{
 ERRORcode=11
 break
 }
+shift
+;;
+-p)mode_private=1
 shift
 ;;
 -y)mode_yes=1
@@ -2891,10 +2896,10 @@ local net_report=$(show_head
 [[ $mode_skip != *"6"* && $2 -eq 4 ]]&&show_speedtest
 [[ $mode_skip != *"7"* ]]&&show_iperf
 show_tail)
-save_json $2
-report_link=$(curl -$2 -s -X POST https://upload.check.place -d "type=net" --data-urlencode "json=$netdata" --data-urlencode "content=$net_report")
+[[ mode_json -eq 1 || mode_output -eq 1 || mode_private -eq 0 ]]&&save_json $2
+[[ mode_private -eq 0 ]]&&report_link=$(curl -$2 -s -X POST https://upload.check.place -d "type=net" --data-urlencode "json=$netdata" --data-urlencode "content=$net_report")
 [[ mode_json -eq 0 ]]&&echo -ne "\r$net_report\n"
-[[ mode_json -eq 0 && $report_link == *"https://Report.Check.Place/"* ]]&&echo -ne "\r${stail[link]}$report_link$Font_Suffix\n"
+[[ mode_json -eq 0 && mode_private -eq 0 && $report_link == *"https://Report.Check.Place/"* ]]&&echo -ne "\r${stail[link]}$report_link$Font_Suffix\n"
 [[ mode_json -eq 1 ]]&&echo -ne "\r$netdata\n"
 echo -ne "\r\n"
 if [[ mode_output -eq 1 ]];then
