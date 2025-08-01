@@ -124,8 +124,14 @@ bash <(curl -Ls https://Net.Check.Place) -y
 bash <(curl -Ls https://Net.Check.Place) -f
 ````
 
+##### 隐私模式——禁用在线报告生成功能：
+````bash
+bash <(curl -Ls https://Net.Check.Place) -p
+````
 
 ## 脚本更新
+
+2025/08/01 15:15 增加-p隐私模式，禁用在线报告生成功能
 
 2025/07/30 16:50 将所有HTTP请求替换为HTTPS以提升脚本安全性
 
