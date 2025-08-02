@@ -37,8 +37,14 @@
 
 ![Net](https://github.com/xykt/ScriptMenu/raw/main/res/Net_CN.png)
 
+##### Bash：
 ````bash
 bash <(curl -Ls https://Check.Place) -N
+````
+
+##### Docker：
+````bash
+docker run --rm --net=host -it xykt/check -N && docker rmi xykt/check > /dev/null 2>&1
 ````
 
 ### 高级模式：参数运行
@@ -129,7 +135,14 @@ bash <(curl -Ls https://Net.Check.Place) -f
 bash <(curl -Ls https://Net.Check.Place) -p
 ````
 
+##### Docker（支持运行参数，须在```&&```前插入）：
+````bash
+docker run --rm --net=host -it xykt/netquality && docker rmi xykt/netquality > /dev/null 2>&1
+````
+
 ## 脚本更新
+
+2025/08/03 00:00 增加Docker运行方式
 
 2025/08/01 15:15 增加-p隐私模式，禁用在线报告生成功能
 
