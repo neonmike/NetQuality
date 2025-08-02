@@ -37,8 +37,14 @@
 
 ![Net](https://github.com/xykt/ScriptMenu/raw/main/res/Net_EN.png)
 
+##### Bash:
 ````bash
 bash <(curl -Ls https://Check.Place) -EN
+````
+
+##### Docker:
+````bash
+docker run --rm --net=host -it xykt/check -EN && docker rmi xykt/check > /dev/null 2>&1
 ````
 
 ### Advanced Mode: Run with Parameters
@@ -142,7 +148,14 @@ bash <(curl -Ls https://Net.Check.Place) -Ef
 bash <(curl -Ls https://Net.Check.Place) -p
 ````
 
+##### Docker (supports runtime arguments; insert them before the ```&&```):
+````bash
+docker run --rm --net=host -it xykt/netquality -E && docker rmi xykt/netquality > /dev/null 2>&1
+````
+
 ## Script Updates
+
+2025/08/03 00:00 Add Docker support
 
 2025/08/01 15:15 Add -p for privacy mode, which disables online report links
 
