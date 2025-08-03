@@ -6,7 +6,7 @@
 
 ## Network Quality Check Script  -  [网络质量体检脚本 (CN)](https://github.com/xykt/NetQuality)
 
-**Supported OS/Platform: Ubuntu | Debian | Linux Mint | Fedora | Red Hat Enterprise Linux (RHEL) | CentOS | Arch Linux | Manjaro | Alpine Linux | AlmaLinux | Rocky Linux | macOS | Anolis OS | Alibaba Cloud Linux | SUSE Linux | openSUSE | Void Linux**
+**Supported OS/Platform: Ubuntu | Debian | Linux Mint | Fedora | Red Hat Enterprise Linux (RHEL) | CentOS | Arch Linux | Manjaro | Alpine Linux | AlmaLinux | Rocky Linux | macOS | Anolis OS | Alibaba Cloud Linux | SUSE Linux | openSUSE | Void Linux | Windows (via Docker)**
 
 - Bilingual support: English & Chinese
 - Supports IPv4/IPv6 dual-stack queries
@@ -43,8 +43,14 @@ bash <(curl -Ls https://Check.Place) -EN
 ````
 
 ##### Docker:
+- Linux
 ````bash
 docker run --rm --net=host -it xykt/check -EN && docker rmi xykt/check > /dev/null 2>&1
+````
+
+- Windows (CMD)
+````bash
+docker run --rm --net=host -it xykt/check -EN & docker rmi xykt/check > NUL 2>&1
 ````
 
 ### Advanced Mode: Run with Parameters
@@ -148,9 +154,15 @@ bash <(curl -Ls https://Net.Check.Place) -Ef
 bash <(curl -Ls https://Net.Check.Place) -p
 ````
 
-##### Docker (supports runtime arguments; insert them before the ```&&```):
+##### Docker (supports runtime arguments; insert them before the ```&```):
+- Linux
 ````bash
 docker run --rm --net=host -it xykt/netquality -E && docker rmi xykt/netquality > /dev/null 2>&1
+````
+
+- Windows (CMD)
+````cmd
+docker run --rm --net=host -it xykt/netquality -E & docker rmi xykt/netquality > NUL 2>&1
 ````
 
 ## Script Updates
