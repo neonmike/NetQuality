@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="v2025-08-19"
+script_version="v2025-08-22"
 check_bash(){
 current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
 major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
@@ -214,19 +214,28 @@ slocal[tcpcc]="Congestion Control: "
 slocal[qdisc]="Queue Discipline:   "
 slocal[rmem]="TCP Receive Buffer: "
 slocal[wmem]="TCP Send Buffer:    "
-slocal[error]=""
-slocal[0x000001]="$Back_Green$Font_White$Font_B Open Without NAT $Font_Suffix"
-slocal[0x000002]="$Back_Yellow$Font_White$Font_B Full Cone NAT $Font_Suffix"
-slocal[0x000004]="$Back_Red$Font_White$Font_B Restricted Cone NAT $Font_Suffix"
-slocal[0x000008]="$Back_Red$Font_White$Font_B Port Restricted Cone NAT $Font_Suffix"
-slocal[0x000010]="$Back_Red$Font_White$Font_B Symmetric NAT $Font_Suffix"
-slocal[0x000013]="$Back_Red$Font_White$Font_B Symmetric NAT with Independent Mapping $Font_Suffix"
-slocal[0x00001c]="$Back_Red$Font_White$Font_B Blocked or Unreachable $Font_Suffix"
-slocal[0x000100]="$Back_Red$Font_White$Font_B Preserves Port $Font_Suffix"
-slocal[0x000200]="$Back_Red$Font_White$Font_B Hairpin $Font_Suffix"
-slocal[0x000400]="$Back_Red$Font_White$Font_B Independent Mapping $Font_Suffix"
-slocal[0x000800]="$Back_Red$Font_White$Font_B Independent Filter $Font_Suffix"
-slocal[unknown]="$Back_Yellow$Font_White$Font_B Unknown NAT Type $Font_Suffix"
+slocal[port]="Port: "
+slocal[mapping]="Mapping: "
+slocal[filter]="Filter: "
+slocal[hairpin]="Hairpin: "
+slocal[m0]="${Font_Green}Independent  $Font_Suffix"
+slocal[m1]="${Font_Red}Dependent    $Font_Suffix"
+slocal[f1]="${Font_Green}Independent      $Font_Suffix"
+slocal[f2]="${Font_Yellow}AddressDependent $Font_Suffix"
+slocal[f3]="${Font_Red}PortDependent    $Font_Suffix"
+slocal[p0]="${Font_Yellow}Random    $Font_Suffix"
+slocal[p1]="${Font_Green}Preserve  $Font_Suffix"
+slocal[h0]="${Font_Green}Yes$Font_Suffix"
+slocal[h1]="${Font_Yellow}No$Font_Suffix"
+slocal[open]="$Back_Green$Font_White$Font_B Open Without NAT $Font_Suffix"
+slocal[full]="$Back_Green$Font_White$Font_B Full Cone $Font_Suffix"
+slocal[rest]="$Back_Yellow$Font_White$Font_B Restricted Cone $Font_Suffix"
+slocal[portrest]="$Back_Yellow$Font_White$Font_B Port Restricted Cone $Font_Suffix"
+slocal[symm]="$Back_Red$Font_White$Font_B Symmetric $Font_Suffix"
+slocal[fail]="$Back_Red$Font_White$Font_B Checking Error $Font_Suffix"
+slocal[firewall]="$Back_yellow$Font_White$Font_B Firewall $Font_Suffix"
+slocal[block]="$Back_red$Font_White$Font_B Connection Failed $Font_Suffix"
+slocal[unknown]="$Back_yellow$Font_White$Font_B Unknown NAT Type $Font_Suffix"
 sconn[title]="3. Connectivity ($Back_Green$Font_White$Font_B*$Font_Suffix$Font_I=Tier1 $Font_Suffix$Back_Yellow$Font_White$Font_B*$Font_Suffix$Font_I=Non-Tier1 $Font_Suffix$Font_U*$Font_Suffix$Font_I=Upstream$Font_Suffix)"
 sconn[ix]="IXPs Counts: "
 sconn[upstreams]="Upstreams Counts: "
@@ -302,19 +311,28 @@ slocal[tcpcc]="TCP拥塞控制算法："
 slocal[qdisc]="队列调度算法：   "
 slocal[rmem]="TCP接收缓冲区（rmem）："
 slocal[wmem]="TCP发送缓冲区（wmem）："
-slocal[error]=""
-slocal[0x000001]="$Back_Green$Font_White$Font_B 开放网络无NAT $Font_Suffix"
-slocal[0x000002]="$Back_Yellow$Font_White$Font_B 完全锥形NAT $Font_Suffix"
-slocal[0x000004]="$Back_Red$Font_White$Font_B 限制锥形NAT $Font_Suffix"
-slocal[0x000008]="$Back_Red$Font_White$Font_B 端口限制锥形NAT $Font_Suffix"
-slocal[0x000010]="$Back_Red$Font_White$Font_B 对称NAT $Font_Suffix"
-slocal[0x000013]="$Back_Red$Font_White$Font_B 独立映射规则对称NAT $Font_Suffix"
-slocal[0x00001c]="$Back_Red$Font_White$Font_B 不可达或连接被阻断 $Font_Suffix"
-slocal[0x000100]="$Back_Red$Font_White$Font_B NAT保留了源端口 $Font_Suffix"
-slocal[0x000200]="$Back_Red$Font_White$Font_B 支持发往自身的反射流量 $Font_Suffix"
-slocal[0x000400]="$Back_Red$Font_White$Font_B NAT映射独立 $Font_Suffix"
-slocal[0x000800]="$Back_Red$Font_White$Font_B NAT过滤独立 $Font_Suffix"
-slocal[unknown]="$Back_Yellow$Font_White$Font_B 未知NAT类型 $Font_Suffix"
+slocal[port]="端口行为："
+slocal[mapping]="映射行为："
+slocal[filter]="过滤行为："
+slocal[hairpin]="环回："
+slocal[m0]="$Font_Green独立映射  $Font_Suffix"
+slocal[m1]="$Font_Red依赖映射  $Font_Suffix"
+slocal[f1]="$Font_Green端点独立过滤 $Font_Suffix"
+slocal[f2]="$Font_Yellow地址依赖过滤 $Font_Suffix"
+slocal[f3]="$Font_Red端口依赖过滤 $Font_Suffix"
+slocal[p0]="$Font_Yellow端口随机  $Font_Suffix"
+slocal[p1]="$Font_Green端口保留  $Font_Suffix"
+slocal[h0]="$Font_Green支持$Font_Suffix"
+slocal[h1]="$Font_Yellow不支持$Font_Suffix"
+slocal[open]="$Back_Green$Font_White$Font_B 开放网络无NAT $Font_Suffix"
+slocal[full]="$Back_Green$Font_White$Font_B 全锥形 $Font_Suffix"
+slocal[rest]="$Back_Yellow$Font_White$Font_B 受限锥形 $Font_Suffix"
+slocal[portrest]="$Back_Yellow$Font_White$Font_B 端口受限锥形 $Font_Suffix"
+slocal[symm]="$Back_Red$Font_White$Font_B 对称型 $Font_Suffix"
+slocal[fail]="$Back_Red$Font_White$Font_B 检测错误 $Font_Suffix"
+slocal[firewall]="$Back_yellow$Font_White$Font_B 防火墙 $Font_Suffix"
+slocal[block]="$Back_red$Font_White$Font_B 连接失败 $Font_Suffix"
+slocal[unknown]="$Back_yellow$Font_White$Font_B 未知NAT类型 $Font_Suffix"
 sconn[title]="三、接入信息（$Back_Green$Font_White$Font_B*$Font_Suffix$Font_I=Tier1 $Font_Suffix$Back_Yellow$Font_White$Font_B*$Font_Suffix$Font_I=非Tier1 $Font_Suffix$Font_U*$Font_Suffix$Font_I=上游$Font_Suffix）"
 sconn[ix]="互联网交换点接入数："
 sconn[upstreams]="上游数量："
@@ -1019,13 +1037,48 @@ show_progress_bar "$temp_info" $((50-${sinfo[lnat]}))&
 bar_pid="$!"&&disown "$bar_pid"
 trap "kill_progress_bar" RETURN
 getnat=()
+if [[ $rawgithub == *"github.com"* ]];then
 local result=$(stun "stun.l.google.com" 2>/dev/null)
-getnat[nat]=$(echo "$result"|grep -oE "0x[0-9A-Fa-f]+")
-if [[ -z ${getnat[nat]} ]];then
-getnat[natresu]="${slocal[error]}"
 else
-getnat[natresu]="${slocal[${getnat[nat]}]}"
+local result=$(stun "stun.miwifi.com" 2>/dev/null)
 fi
+getnat[nat]=$(echo "$result"|grep -oE "0x[0-9A-Fa-f]+")
+[[ -z ${getnat[nat]} ]]&&return 1
+local val=$((${getnat[nat]}))
+local portpres=$((val&0x01))
+local filtering=$(((val&0x06)>>1))
+local mapping=$(((val&0x08)>>3))
+local hairpin=$(((val&0x10)>>4))
+getnat[m]=$mapping
+getnat[f]=$filtering
+getnat[p]=$portpres
+getnat[h]=$hairpin
+local ntype="fail"
+getnat[char]=0
+if [[ ${getnat[nat]} == "0xFFFFFFFF" || ${getnat[nat]} == "0x0000EE" ]];then
+ntype="fail"
+elif [[ $mapping -eq 1 && $filtering -eq 1 ]];then
+ntype="firewall"
+elif [[ $mapping -eq 1 && $filtering -eq 2 ]];then
+ntype="block"
+elif [[ $mapping -eq 1 && $filtering -eq 3 ]];then
+ntype="unknown"
+elif [[ $mapping -eq 0 && $filtering -eq 0 ]];then
+ntype="open"
+elif [[ $mapping -eq 0 && $filtering -eq 1 ]];then
+ntype="full"
+getnat[char]=1
+elif [[ $mapping -eq 0 && $filtering -eq 2 ]];then
+ntype="rest"
+getnat[char]=1
+elif [[ $mapping -eq 0 && $filtering -eq 3 ]];then
+ntype="portrest"
+getnat[char]=1
+elif [[ $mapping -eq 1 ]];then
+ntype="symm"
+getnat[char]=1
+fi
+getnat[type]=$ntype
 }
 get_tcp(){
 local temp_info="$Font_Cyan$Font_B${sinfo[tcp]}$Font_Suffix"
@@ -2441,7 +2494,10 @@ fi
 }
 show_local(){
 echo -ne "\r${slocal[title]}\n"
-[[ -n ${getnat[natresu]} ]]&&echo -ne "\r$Font_Cyan${slocal[nat]}$Font_Green${getnat[natresu]}$Font_Suffix\n"
+[[ -n ${getnat[type]} ]]&&echo -ne "\r$Font_Cyan${slocal[nat]}${slocal[${getnat[type]}]}$Font_Suffix\n"
+if [[ ${getnat[char]} -eq 1 ]];then
+echo -ne "\r$Font_Cyan${slocal[mapping]}${slocal[m${getnat[m]}]}$Font_Suffix$Font_Cyan${slocal[filter]}${slocal[f${getnat[f]}]}$Font_Suffix$Font_Cyan${slocal[port]}${slocal[p${getnat[p]}]}$Font_Suffix$Font_Cyan${slocal[hairpin]}${slocal[h${getnat[h]}]}$Font_Suffix\n"
+fi
 echo -ne "\r$Font_Cyan${slocal[tcpcc]}$Font_Green$(printf '%-13s' "${gettcp[tcpcc]}")$Font_Cyan${slocal[rmem]}$Font_Green${gettcp[rmem]}$Font_Suffix\n"
 echo -ne "\r$Font_Cyan${slocal[qdisc]}$Font_Green$(printf '%-13s' "${gettcp[qdisc]}")$Font_Cyan${slocal[wmem]}$Font_Green${gettcp[wmem]}$Font_Suffix\n"
 }
