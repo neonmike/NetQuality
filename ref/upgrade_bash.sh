@@ -1,12 +1,14 @@
 #!/bin/bash
 upgrade_bash() {
     # 检查当前的 Bash 版本
-    current_bash_version=$(bash --version | head -n 1 | awk -F ' ' '{for (i=1; i<=NF; i++) if ($i ~ /^[0-9]+\.[0-9]+\.[0-9]+/) {print $i; exit}}' | cut -d . -f 1)
-    if [ "$current_bash_version" -ge 4 ]; then
-        echo "Bash version is 4.0 or higher. No need to upgrade."
+    current_bash_version=$(bash --version | head -n 1 | awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
+    major_version=$(echo "$current_bash_version" | cut -d'.' -f1)
+    minor_version=$(echo "$current_bash_version" | cut -d'.' -f2)
+    if [ "$major_version" -lt 4 ] || { [ "$major_version" -eq 4 ] && [ "$minor_version" -lt 3 ]; }; then
+        echo "Bash version is 4.3 or higher. No need to upgrade."
         return 0
     fi
-    echo "Bash version is lower than 4.0. Upgrading Bash..."
+    echo "Bash version is lower than 4.3. Upgrading Bash..."
     if [ "$(uname)" == "Darwin" ]; then
         if ! command -v brew >/dev/null 2>&1; then
             echo "Homebrew is not installed. Installing Homebrew..."
