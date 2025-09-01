@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="v2025-08-22"
+script_version="v2025-09-01"
 check_bash(){
 current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
 major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
@@ -226,16 +226,16 @@ slocal[f3]="${Font_Red}PortDependent    $Font_Suffix"
 slocal[p0]="${Font_Yellow}Random    $Font_Suffix"
 slocal[p1]="${Font_Green}Preserve  $Font_Suffix"
 slocal[h0]="${Font_Green}Yes$Font_Suffix"
-slocal[h1]="${Font_Yellow}No$Font_Suffix"
+slocal[h1]="${Font_Red}No$Font_Suffix"
 slocal[open]="$Back_Green$Font_White$Font_B Open Without NAT $Font_Suffix"
-slocal[full]="$Back_Green$Font_White$Font_B Full Cone $Font_Suffix"
+slocal[full]="$Font_White$Font_B Full Cone $Font_Suffix"
 slocal[rest]="$Back_Yellow$Font_White$Font_B Restricted Cone $Font_Suffix"
 slocal[portrest]="$Back_Yellow$Font_White$Font_B Port Restricted Cone $Font_Suffix"
 slocal[symm]="$Back_Red$Font_White$Font_B Symmetric $Font_Suffix"
 slocal[fail]="$Back_Red$Font_White$Font_B Checking Error $Font_Suffix"
-slocal[firewall]="$Back_yellow$Font_White$Font_B Firewall $Font_Suffix"
-slocal[block]="$Back_red$Font_White$Font_B Connection Failed $Font_Suffix"
-slocal[unknown]="$Back_yellow$Font_White$Font_B Unknown NAT Type $Font_Suffix"
+slocal[firewall]="$Back_Yellow$Font_White$Font_B Firewall $Font_Suffix"
+slocal[block]="$Back_Red$Font_White$Font_B Connection Failed $Font_Suffix"
+slocal[unknown]="$Back_Yellow$Font_White$Font_B Unknown NAT Type $Font_Suffix"
 sconn[title]="3. Connectivity ($Back_Green$Font_White$Font_B*$Font_Suffix$Font_I=Tier1 $Font_Suffix$Back_Yellow$Font_White$Font_B*$Font_Suffix$Font_I=Non-Tier1 $Font_Suffix$Font_U*$Font_Suffix$Font_I=Upstream$Font_Suffix)"
 sconn[ix]="IXPs Counts: "
 sconn[upstreams]="Upstreams Counts: "
@@ -323,16 +323,16 @@ slocal[f3]="$Font_Red端口依赖过滤 $Font_Suffix"
 slocal[p0]="$Font_Yellow端口随机  $Font_Suffix"
 slocal[p1]="$Font_Green端口保留  $Font_Suffix"
 slocal[h0]="$Font_Green支持$Font_Suffix"
-slocal[h1]="$Font_Yellow不支持$Font_Suffix"
+slocal[h1]="$Font_Red不支持$Font_Suffix"
 slocal[open]="$Back_Green$Font_White$Font_B 开放网络无NAT $Font_Suffix"
-slocal[full]="$Back_Green$Font_White$Font_B 全锥形 $Font_Suffix"
+slocal[full]="$Font_White$Font_B 全锥形 $Font_Suffix"
 slocal[rest]="$Back_Yellow$Font_White$Font_B 受限锥形 $Font_Suffix"
 slocal[portrest]="$Back_Yellow$Font_White$Font_B 端口受限锥形 $Font_Suffix"
 slocal[symm]="$Back_Red$Font_White$Font_B 对称型 $Font_Suffix"
 slocal[fail]="$Back_Red$Font_White$Font_B 检测错误 $Font_Suffix"
-slocal[firewall]="$Back_yellow$Font_White$Font_B 防火墙 $Font_Suffix"
-slocal[block]="$Back_red$Font_White$Font_B 连接失败 $Font_Suffix"
-slocal[unknown]="$Back_yellow$Font_White$Font_B 未知NAT类型 $Font_Suffix"
+slocal[firewall]="$Back_Yellow$Font_White$Font_B 防火墙 $Font_Suffix"
+slocal[block]="$Back_Red$Font_White$Font_B 连接失败 $Font_Suffix"
+slocal[unknown]="$Back_Yellow$Font_White$Font_B 未知NAT类型 $Font_Suffix"
 sconn[title]="三、接入信息（$Back_Green$Font_White$Font_B*$Font_Suffix$Font_I=Tier1 $Font_Suffix$Back_Yellow$Font_White$Font_B*$Font_Suffix$Font_I=非Tier1 $Font_Suffix$Font_U*$Font_Suffix$Font_I=上游$Font_Suffix）"
 sconn[ix]="互联网交换点接入数："
 sconn[upstreams]="上游数量："
@@ -493,12 +493,10 @@ $usesudo $install_command jq curl ImageMagick mtr iperf3 bc procps-ng libstdc++
 ;;
 pacman)$usesudo pacman -Sy
 $usesudo $install_command jq curl imagemagick mtr iperf3 bc procps-ng
-if command -v paru >/dev/null 2>&1; then
-    $usesudo paru -S --noconfirm gcompat
-elif command -v yay >/dev/null 2>&1; then
-    $usesudo yay -S --noconfirm gcompat
-else
-    echo "Neither paru nor yay found. Please install one of them for AUR support."
+if command -v paru >/dev/null 2>&1;then
+paru -S --noconfirm gcompat
+elif command -v yay >/dev/null 2>&1;then
+yay -S --noconfirm gcompat
 fi
 ;;
 apk)$usesudo apk update
@@ -1073,6 +1071,7 @@ elif [[ $mapping -eq 0 && $filtering -eq 0 ]];then
 ntype="open"
 elif [[ $mapping -eq 0 && $filtering -eq 1 ]];then
 ntype="full"
+[[ $hairpin -eq 0 ]]&&slocal[full]="$Back_Green${slocal[full]}"||slocal[full]="$Back_Yellow${slocal[full]}"
 getnat[char]=1
 elif [[ $mapping -eq 0 && $filtering -eq 2 ]];then
 ntype="rest"
@@ -2732,39 +2731,69 @@ echo -ne "\r$shelp\n"
 exit 0
 }
 show_ad(){
-local RANDOM=$(date +%s)
-local indices=(1 2 3)
-for ((i=${#indices[@]}-1; i>0; i--));do
-j=$((RANDOM%(i+1)))
-temp=${indices[i]}
+RANDOM=$(date +%s)
+local -a ads=()
+local i=1
+while :;do
+local content
+content=$(curl -fsL --max-time 5 "${rawgithub}main/ref/ad$i.ans")||break
+ads+=("$content")
+((i++))
+done
+local adCount=${#ads[@]}
+local -a indices=()
+for ((i=1; i<=adCount; i++));do indices+=("$i");done
+for ((i=adCount-1; i>0; i--));do
+local j=$((RANDOM%(i+1)))
+local tmp=${indices[i]}
 indices[i]=${indices[j]}
-indices[j]=$temp
+indices[j]=$tmp
 done
+local -a aad
 aad[0]=$(curl -sL --max-time 5 "${rawgithub}main/ref/sponsor.ans")
-aad[${indices[0]}]=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad1.ans")
-aad[${indices[1]}]=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad2.ans")
-aad[${indices[2]}]=$(curl -sL --max-time 5 "${rawgithub}main/ref/ad3.ans")
-local rows
-local cols
-read rows cols < <(stty size)
+for ((i=0; i<adCount; i++));do
+aad[${indices[i]}]="${ads[i]}"
+done
+local rows cols
+if ! read rows cols < <(stty size 2>/dev/null);then cols=0;fi
+ADLines=0
+print_pair(){
+local left="$1" right="$2"
+local -a L R
+mapfile -t L <<<"$left"
+mapfile -t R <<<"$right"
+local i
+for ((i=0; i<12; i++));do
+printf "%-72s$Font_Suffix     %-72s\n" "${L[i]}" "${R[i]}" 1>&2
+done
+ADLines=$((ADLines+12))
+}
+print_block(){
+echo "$1" 1>&2
+ADLines=$((ADLines+12))
+}
 if [[ $cols -ge 150 ]];then
-mapfile -t aad0 <<<"${aad[0]}"
-mapfile -t aad1 <<<"${aad[1]}"
-mapfile -t aad2 <<<"${aad[2]}"
-mapfile -t aad3 <<<"${aad[3]}"
-for ((i=0; i<12; i++));do
-printf "%-72s$Font_Suffix     %-72s\n" "${aad0[$i]}" "${aad1[$i]}" 1>&2
+if ((adCount==0));then
+print_block "${aad[0]}"
+elif ((adCount%2==1));then
+print_pair "${aad[0]}" "${aad[1]}"
+local k
+for ((k=2; k<=adCount; k+=2));do
+print_pair "${aad[$k]}" "${aad[$((k+1))]}"
 done
-for ((i=0; i<12; i++));do
-printf "%-72s$Font_Suffix     %-72s\n" "${aad2[$i]}" "${aad3[$i]}" 1>&2
+else
+print_block "${aad[0]}"
+local k
+for ((k=1; k<=adCount; k+=2));do
+print_pair "${aad[$k]}" "${aad[$((k+1))]}"
 done
-ADLines=24
+fi
 else
 echo "${aad[0]}" 1>&2
-echo "${aad[1]}" 1>&2
-echo "${aad[2]}" 1>&2
-echo "${aad[3]}" 1>&2
-ADLines=48
+for ((i=1; i<=adCount; i++));do
+echo "${aad[$i]}" 1>&2
+done
+ADLines=$(((adCount+1)*12))
 fi
 }
 read_ref(){
