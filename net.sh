@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="v2025-09-01"
+script_version="v2025-09-18"
 check_bash(){
 current_bash_version=$(bash --version|head -n 1|awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+(\.[0-9]+)?/) print $i}')
 major_version=$(echo "$current_bash_version"|cut -d'.' -f1)
