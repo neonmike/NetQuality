@@ -22,7 +22,7 @@ upgrade_bash() {
     else
         if [ -f /etc/os-release ]; then
             . /etc/os-release
-            if [ $(id -u) -ne 0 ] && ! command -v sudo >/dev/null 2>&1; then
+            if [ $(id -u) -ne 0 ] &&  ! sudo -v >/dev/null 2>&1 ; then
                 echo "Error: You need sudo privileges to upgrade Bash."
                 exit 1
             fi

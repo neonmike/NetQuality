@@ -13,6 +13,7 @@ Tips: Run the following script to automatically upgrade Bash.
 bash <(curl -sL https://raw.githubusercontent.com/xykt/NetQuality/main/ref/upgrade_bash.sh)"
     exit 0
 fi
+
 Font_B="\033[1m"
 Font_D="\033[2m"
 Font_I="\033[3m"
@@ -929,9 +930,10 @@ get_bgp() {
 db_bgptools() {
     local temp_info="$Font_Cyan$Font_B${sinfo[bgp]}${Font_I}BGP.TOOLS $Font_Suffix"
     ((ibar_step += 1))
-    show_progress_bar "$temp_info" $((50 - 10 - ${sinfo[lbgp]})) &
-    bar_pid="$!" && disown "$bar_pid"
-    trap "kill_progress_bar" RETURN
+    show_progress_bar "$temp_info" $((50 - 10 - ${sinfo[lbgp]})) &  # 后台运行 tempinfo 
+    bar_pid="$!" && disown "$bar_pid" # $!上一个后台进程的 PID，当前 Shell 的作业列表中移除进程
+    trap "kill_progress_bar" RETURN  # 开启信号捕获命令，当捕获Return 的时候，执行kill_progress_bar 
+    # 空数组
     bgp=()
     getbgp=()
     conn=()
@@ -940,21 +942,27 @@ db_bgptools() {
     ctarget=()
     ctier1=()
     cupstream=()
+    
     local RESPONSE=$(curl $CurlARG -$1 --user-agent "$UA_Browser" --max-time 10 -Ls "https://bgp.tools/prefix/$IP")
+    # 当从 BGP Tools 网站返回的响应内容中检测到“Overlapping Prefixes Detected”（重叠前缀）这个提示时，自动获取重叠的第一个前缀，重新发起请求，抓取新的前缀页面数据。
     if [[ $RESPONSE == *"Overlapping Prefixes Detected"* ]]; then
         bgp[prefix]=$(echo "$RESPONSE" | grep -o 'href="/prefix/[^"]*' | head -1 | cut -d'/' -f3-)
         RESPONSE=$(curl $CurlARG -$1 --user-agent "$UA_Browser" --max-time 10 -Ls "https://bgp.tools/prefix/${bgp[prefix]}")
     fi
+    # 网络前缀字符串
     bgp[prefix]=$(echo "$RESPONSE" | sed -n 's/.*<p id="network-name" class="heading-xlarge">\([^<]*\)<\/p>.*/\1/p')
     if [[ ${bgp[prefix]} == */* ]]; then
-        bgp[ip0]="${bgp[prefix]%%/*}"
+        bgp[ip0]="${bgp[prefix]%%/*}" # 拆分 IP 和前缀长度
         bgp[prefixnum]="${bgp[prefix]##*/}"
     fi
+    # ASN（自治系统号） 和 ASN对应的组织名称
     bgp[asn]=$(echo "$RESPONSE" | awk -v RS='<strong>' '/Originated by/ {getline; print $0}' | sed 's/<[^>]*>//g' | head -n 1)
     bgp[asn]="${bgp[asn]%%,*}"
     bgp[org]=$(echo "$RESPONSE" | sed -n 's/.*AS Name: <strong>\([^<]*\)<\/strong>.*/\1/p')
+    # 从 HTML 内容中提取特定的“whois”信息块，并去除 HTML 标签，保留纯文本内容
     local last_field_name=""
     local CONTENT=$(echo "$RESPONSE" | sed -n '/<div style="display: none" id="whois-page">/,/<\/div>/p' | sed -n '/<pre style="white-space: pre-wrap;">/,/<\/pre>/p' | sed 's/<pre style="white-space: pre-wrap;">//' | sed 's/<[^>]*>//g')
+    # 逐行读取纯文本内容（$CONTENT），并按“字段名: 字段值”的格式解析，存入关联数组 getbgp，同时处理字段值可能跨多行的情况。
     while IFS= read -r line; do
         [[ -z $line ]] && continue
         if [[ $line == *:* ]]; then
@@ -973,8 +981,9 @@ db_bgptools() {
             fi
         fi
     done <<<"$CONTENT"
+
     get_bgp
-    calc_upstream $1 "$RESPONSE"
+    calc_upstream $1 "$RESPONSE" #计算或分析该目标的上游网络信息
     calc_ix $1
     calc_peers "$RESPONSE"
 }
@@ -2979,7 +2988,7 @@ save_json() {
 
 # $2：表示 IP 类型，4 表示 IPv4，6 表示 IPv6
 check_Net() {
-    set -x
+ 
     # 变量赋值，IP 赋值为传入的第一个参数，ibar_step 计数变量初始化。
     IP=$1
     ibar_step=0
@@ -2998,8 +3007,8 @@ check_Net() {
     countRunTimes #计算调用次数
     # 接下来是一系列条件判断来控制是否调用不同的检测模块
     [[ $mode_skip != *"1"* || $mode_skip != *"3"* ]] && db_bgptools $2 #
-    [[ $mode_skip != *"1"* ]] && db_henet $2
-    [[ $mode_skip != *"1"* && $2 -eq 4 && -n ${bgp[prefixnum]} ]] && get_neighbor
+    [[ $mode_skip != *"1"* ]] && db_henet $2 #（获取或记录 HENET 数据）
+    [[ $mode_skip != *"1"* && $2 -eq 4 && -n ${bgp[prefixnum]} ]] && get_neighbor #获取 BGP 邻居信息
     getnat=()
     [[ $mode_skip != *"2"* && $2 -eq 4 ]] && get_nat
     [[ $mode_skip != *"2"* ]] && get_tcp
@@ -3010,23 +3019,14 @@ check_Net() {
     [[ $mode_skip != *"7"* ]] && iperf_test $2
     # 通过判断字符串变量 mode_skip 是否包含某些数字，来决定是否跳过某些检测项。
     # 检测项包括：
-
     # BGP信息相关（db_bgptools）
-
     # 本地网络信息（db_henet）
-
     # 邻居节点信息（get_neighbor）
-
     # NAT信息（get_nat）
-
     # TCP连接信息（get_tcp）
-
     # 延迟检测（get_delay）
-
     # 路由信息（get_route 和 get_route_mode）
-
     # 速度测试（speedtest_test）
-
     # 通过 iperf 的带宽测试（iperf_test）
 
     
@@ -3083,11 +3083,11 @@ check_Net() {
         *) echo -e "$net_report" | sed 's/\x1b\[[0-9;]*[mGKHF]//g' >>"$outputfile" 2>/dev/null ;;
         esac
     fi
-    set +x
+
 
 }
-generate_random_user_agent
-export LC_CTYPE=en_US.UTF-8 2>/dev/null
+generate_random_user_agent // 生成代理
+export LC_CTYPE=en_US.UTF-8 2>/dev/null  // LC_TYPE 设置
 check_connectivity
 get_ipv4
 get_ipv6
@@ -3102,6 +3102,8 @@ if [[ $ERRORcode -ne 0 ]]; then
     echo -ne "\r$Font_B$Font_Red${swarn[$ERRORcode]}$Font_Suffix\n"
     exit $ERRORcode
 fi
+
 clear
-[[ $IPV4work -ne 0 && $IPV4check -ne 0 ]] && check_Net "$IPV4" 4
+
+[[ $IPV4work -ne 0 && $IPV4check -ne 0 ]] && check_Net "$IPV4" 4 # IPV4
 [[ $IPV6work -ne 0 && $IPV6check -ne 0 ]] && check_Net "$IPV6" 6
